@@ -15,18 +15,21 @@ const SparksSection = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!isLoading) {
-      socket.on("receive_message", (data) => {
-        dispatch(getSparks({ team_id: id, token: Cookies.get("token") }));
-      });
-    }
     try {
       dispatch(getSparks({ team_id: id, token: Cookies.get("token") }));
     } catch (err) {
       router.push("/");
       handleAlertToastify("Can't Access This Page", "error");
     }
-  }, [dispatch, isLoading]);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!isLoading && id) {
+      socket.on("receive_message", (data) => {
+        dispatch(getSparks({ team_id: id, token: Cookies.get("token") }));
+      });
+    }
+  }, [dispatch,isLoading]);
 
   return (
     <Box className={`grid jcs aic g30`}>

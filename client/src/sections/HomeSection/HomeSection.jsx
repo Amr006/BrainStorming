@@ -16,6 +16,7 @@ const HomeSection = () => {
       const token = Cookies.get("token");
       const user_id = Cookies.get("user_id");
       socket.on("receive_message", (data) => {
+        console.log("hello");
         dispatch(getUserSparks({ token, user_id }));
       });
     }
@@ -23,6 +24,7 @@ const HomeSection = () => {
       const token = Cookies.get("token");
       const user_id = Cookies.get("user_id");
       if (token && user_id) {
+        console.log(1)
         dispatch(getUserSparks({ token, user_id }));
       }
     } catch (err) {

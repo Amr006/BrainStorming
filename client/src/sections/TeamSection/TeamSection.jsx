@@ -65,7 +65,7 @@ const TeamSection = () => {
     };
   }
   const [value, setValue] = React.useState(1);
-  
+
   const {
     handleToggleChangeTeamImageModal,
     handleToggleViewTeamImageModal,
@@ -81,18 +81,20 @@ const TeamSection = () => {
   const { team, isLoading } = useSelector((state) => state.team);
   const { user_id } = useSelector((state) => state.auth);
   const router = useRouter();
-
   useEffect(() => {
-    if(!isLoading){
-      socket.emit("join_room", team.Name);
-    }
     try {
       dispatch(getTeam({ team_id: id, token: Cookies.get("token") }));
     } catch (err) {
       router.push("/");
       handleAlertToastify("Can't Access This Page", "error");
     }
-  }, [dispatch,isLoading]);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!isLoading && team) {
+      socket.emit("join_room", team.Name);
+    }
+  }, [isLoading]);
 
   return isLoading || !team ? (
     <LoadingTeamSection />

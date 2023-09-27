@@ -562,7 +562,7 @@ const Form = ({ type, setValue }) => {
       })
       .catch((err) => {
         try {
-          handleAlertToastify(err.response.data.message, "error");
+          handleAlertToastify(err.response.data.message, "info");
         } catch (err) {
           handleAlertToastify(err, "error");
         }

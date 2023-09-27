@@ -12,82 +12,73 @@ import {
   KeyboardVoiceRounded,
   VideoLibraryRounded,
 } from "@mui/icons-material";
-import { useContext } from "react";
 import AudioGridBox from "../GridBoxes/AudioGridBox/AudioGridBox";
 import TeamName from "./TeamName";
-import { Slide } from "@mui/material";
 
-const Spark = ({ data, teamShow }) => {
+const Spark = ({ data, teamShow ,last}) => {
   return (
-    <Slide direction="up" in={true} mountOnEnter unmountOnExit>
-      <Box className={`grid jcs aic`}>
-        {teamShow && <TeamName data={data} />}
-        <Box className={`grid jcs aic g10 ${styles.spark}`}>
-          <SparkHead data={data} />
-          <Box className={`grid jcs aic g20 ${styles.spark_data}`}>
-            <Box className={`grid jcfs aic g10`}>
-              <Head
-                h={"h5"}
-                align="left"
-                title={data.Idea}
-                color={"#000"}
-              />
-              <Typography variant="h6" className={`fw500`}>
-                {data.Description}
-              </Typography>
-            </Box>
-            {data.Record.length > 0 && (
-              <Box className={`grid jcs aic g10`}>
-                <Box className={`flex jcfs aic g5`}>
-                  <KeyboardVoiceRounded
-                    sx={{ color: (theme) => theme.palette.primary.main }}
-                    className={`${styles.file_icon}`}
-                  />
-                  <Typography variant="h6">Record</Typography>
-                </Box>
-                <audio src={data.Record} controls={true} />
-              </Box>
-            )}
-            {data.Images && data.Images.length > 0 && (
-              <Box className={`grid jcs aic g10`}>
-                <Box className={`flex jcfs aic g5`}>
-                  <ImageRounded
-                    sx={{ color: (theme) => theme.palette.primary.main }}
-                    className={`${styles.file_icon}`}
-                  />
-                  <Typography variant="h6">Images</Typography>
-                </Box>
-                <ImagesGridBox data={data.Images} />
-              </Box>
-            )}
-            {data.Files && data.Files.length > 0 && (
-              <Box className={`grid jcs aic g10`}>
-                <Box className={`flex jcfs aic g5`}>
-                  <VideoLibraryRounded
-                    sx={{ color: (theme) => theme.palette.primary.main }}
-                    className={`${styles.file_icon}`}
-                  />
-                  <Typography variant="h6">Documents</Typography>
-                </Box>
-                <DocsGridBox data={data.Files} />
-              </Box>
-            )}
-            {data.Audios && data.Audios.length > 0 && (
-              <Box className={`grid jcs aic g10`}>
-                <Box className={`flex jcfs aic g5`}>
-                  <AudiotrackRounded
-                    sx={{ color: (theme) => theme.palette.primary.main }}
-                    className={`${styles.file_icon}`}
-                  />
-                  <Typography variant="h6">Audios</Typography>
-                </Box>
-                <AudioGridBox data={data.Audios} />
-              </Box>
-            )}
+    <Box className={`grid jcs aic`}>
+      {teamShow && <TeamName data={data} />}
+      <Box className={`grid jcs aic g10 ${styles.spark}`}>
+        <SparkHead data={data} />
+        <Box className={`grid jcs aic g20 ${styles.spark_data}`}>
+          <Box className={`grid jcfs aic g10`}>
+            <Head h={"h5"} align="left" title={data.Idea} color={"#000"} />
+            <Typography variant="h6" className={`fw500`}>
+              {data.Description}
+            </Typography>
           </Box>
+          {data.Record.length > 0 && (
+            <Box className={`grid jcs aic g10`}>
+              <Box className={`flex jcfs aic g5`}>
+                <KeyboardVoiceRounded
+                  sx={{ color: (theme) => theme.palette.primary.main }}
+                  className={`${styles.file_icon}`}
+                />
+                <Typography variant="h6">Record</Typography>
+              </Box>
+              <audio src={data.Record} controls={true} />
+            </Box>
+          )}
+          {data.Images && data.Images.length > 0 && (
+            <Box className={`grid jcs aic g10`}>
+              <Box className={`flex jcfs aic g5`}>
+                <ImageRounded
+                  sx={{ color: (theme) => theme.palette.primary.main }}
+                  className={`${styles.file_icon}`}
+                />
+                <Typography variant="h6">Images</Typography>
+              </Box>
+              <ImagesGridBox data={data.Images} />
+            </Box>
+          )}
+          {data.Files && data.Files.length > 0 && (
+            <Box className={`grid jcs aic g10`}>
+              <Box className={`flex jcfs aic g5`}>
+                <VideoLibraryRounded
+                  sx={{ color: (theme) => theme.palette.primary.main }}
+                  className={`${styles.file_icon}`}
+                />
+                <Typography variant="h6">Documents</Typography>
+              </Box>
+              <DocsGridBox data={data.Files} />
+            </Box>
+          )}
+          {data.Audios && data.Audios.length > 0 && (
+            <Box className={`grid jcs aic g10`}>
+              <Box className={`flex jcfs aic g5`}>
+                <AudiotrackRounded
+                  sx={{ color: (theme) => theme.palette.primary.main }}
+                  className={`${styles.file_icon}`}
+                />
+                <Typography variant="h6">Audios</Typography>
+              </Box>
+              <AudioGridBox data={data.Audios} />
+            </Box>
+          )}
         </Box>
       </Box>
-    </Slide>
+    </Box>
   );
 };
 

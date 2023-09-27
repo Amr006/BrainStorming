@@ -18,9 +18,10 @@ export const sparksSlice = createSlice({
   name: "sparks",
   initialState,
   reducers:{
-    addSpark:(state,action)=>{
-      console.log(action)
-      state.sparks.unshift(action.payload)
+    addSparks:(state,action)=>{
+      action.payload.map((spark)=>{
+        state.sparks.push(spark)
+      })
     }
   },
   extraReducers: (builder) => {

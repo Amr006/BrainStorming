@@ -38,9 +38,6 @@ const Main = ({ children }) => {
         console.log("Connected to the server");
       }
       socket.on("connect", socketConnected);
-      if (token && user_id) {
-        dispatch(getUserSparks({ token, user_id }));
-      }
       if (user_id) {
         dispatch(getUserData(user_id));
       }
@@ -50,9 +47,6 @@ const Main = ({ children }) => {
     } catch (err) {
       console.log(err);
     }
-    // return () => {
-    //   socket.disconnect();
-    // };
   }, [Cookies, dispatch, id]);
   if (
     pathname === process.env.NEXT_PUBLIC_REGISTER_PAGE ||
