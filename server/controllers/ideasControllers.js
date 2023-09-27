@@ -137,11 +137,21 @@ const displayIdeas = asyncHandler(async(req, res, next) => {
       path: "TeamLeader",
       model: "User"
     }
-  }).sort({createdAt: -1})
+  }).sort({createdAt: -1}).limit(req.query.limit).skip(req.query.page*5)
     .then((result) => {
-      return res.status(200).json({
-        data: result,
-      });
+      if(result.length < 5)
+      {
+        return res.status(200).json({
+          data: result,
+          message : "last spark"
+        });
+      }else
+      {
+        return res.status(200).json({
+          data: result,
+        });
+      }
+      
     })
     .catch((err) => {
       return res.status(404).json({
