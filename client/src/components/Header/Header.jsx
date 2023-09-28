@@ -9,7 +9,7 @@ import {
   ListItemText,
   Box,
 } from "@mui/material";
-import { AccountCircle, Menu } from "@mui/icons-material";
+import { AccountCircle, Menu, SearchOutlined } from "@mui/icons-material";
 import styles from "./Header.module.css";
 import Logo from "../Logo/Logo";
 import Link from "next/link";
