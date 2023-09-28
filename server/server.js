@@ -21,6 +21,7 @@ var hpp = require("hpp");
 const mongoSanitize = require("express-mongo-sanitize");
 const { Server } = require("socket.io");
 const http = require("http");
+const compression = require('compression'); 
 
 const uploadImage = require("./utils/uploadImage");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
@@ -100,7 +101,7 @@ app.use(limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(openapiSpecification));
-
+app.use(compression());
 app.use(
   helmet({
     contentSecurityPolicy: {

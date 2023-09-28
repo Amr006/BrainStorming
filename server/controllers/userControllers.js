@@ -141,7 +141,11 @@ const allPostsForUser = asyncHandler( async(req,res,next) => {
     // Compare the dates in descending order (latest first)
     return dateB - dateA;
   });
-  
+  if(req.query.page != 0)
+  {
+    ideas = ideas.slice(req.query.page*10 , req.query.page*10 + req.query.page*10 )
+  }
+
   return res.status(200).json({
     data : ideas
   })

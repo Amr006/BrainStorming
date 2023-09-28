@@ -186,4 +186,5 @@ const updateIdea = asyncHandler(async (req, res, next) => {
   }
 });
 
+
 module.exports = { displayIdeas, postIdeas, deleteIdea, updateIdea };
