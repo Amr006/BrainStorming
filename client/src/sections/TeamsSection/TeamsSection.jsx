@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import Head from "../../components/Head/Head";
 import styles from "./TeamsSection.module.css";
-import Image from "next/image";
 import roomsSectionImg1 from "../../../public/images/brain1.png";
 import { MyBox } from "@/MUIComponents/MyBox/MyBox";
 import TeamsGridBox from "@/components/GridBoxes/TeamsGridBox/TeamsGridBox";
@@ -19,6 +18,7 @@ import { useEffect } from "react";
 import { getTeams } from "@/store/teamsSlice";
 import LoadingTeamsGridBox from "@/components/GridBoxes/TeamsGridBox/LoadingTeamsGridBox";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import Search from "@/components/Form/Search/Search";
 
 const TeamsSection = () => {
   const dispatch = useDispatch();
@@ -41,6 +41,7 @@ const TeamsSection = () => {
         className={`${styles.brain}`}
       />
       <Container className={`grid jcs aic g30`}>
+        <Search />
         {signed && user_teams && (
           <Accordion expanded={expanded} onChange={handleChange}>
             <AccordionSummary

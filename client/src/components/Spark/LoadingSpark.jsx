@@ -8,9 +8,25 @@ import { getSparks } from "@/store/sparksSlice";
 import { useParams } from "next/navigation";
 import axios from "axios";
 
-const LoadingSpark = ({ last, setSparks, setCounter, counter ,setDone, done}) => {
+const LoadingSpark = ({ last, setSparks, setCounter,setUserSparks, counter ,setDone, done,all}) => {
   const { token } = useSelector((state) => state.auth);
   const { id } = useParams();
+
+  const handleFetchUserSparks = async () => {
+    await axios
+      .get(`${process.env.NEXT_PUBLIC_SERVER_URL}/allIdeas?page=${counter}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        if (res.data.message === "last spark") {
+          setDone(true);
+        }
+        setUserSparks(res.data.data);
+      })
+      .catch((err) => {
+        handleAlertToastify(err.response.data.message, "error");
+      });
+  };
   const handleFetchTeamSparks = async () => {
     await axios
       .get(
@@ -35,8 +51,13 @@ const LoadingSpark = ({ last, setSparks, setCounter, counter ,setDone, done}) =>
     threshold: 0,
   });
   if (inView && last && !done) {
-    handleFetchTeamSparks();
+    if(!all){
+      handleFetchTeamSparks();
+    }else{
+      handleFetchUserSparks();
+    }
   }
+
   return (
     <Box
       className={`grid jcs aic g10 ${styles.spark} ${styles.loading_spark}`}

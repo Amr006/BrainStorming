@@ -2,6 +2,10 @@
   position: fixed !important;
 }
 
+.header_contain{
+  position: relative;
+}
+
 .list li div {
   padding: 0 !important;
   margin: 0 !important;

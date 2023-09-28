@@ -14,6 +14,7 @@ const SparksSection = () => {
   const [sparks, setSparks] = useState([]);
   const [counter, setCounter] = useState(0);
   const [done, setDone] = useState(false);
+  const [allSparks , setAllSparks] = useState(0)
   const token = Cookies.get("token");
   const handleFetchTeamSparks = async () => {
     await axios

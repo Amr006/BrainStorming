@@ -1,0 +1,28 @@
+.search_box {
+    box-shadow: var(--box_shadow);
+    z-index: 1000;
+    background-color: var(--white);
+    padding: 20px;
+}
+
+.search_box>div {
+    width: 100%;
+}
+
+@media (max-width:992px) {
+    .search_box {
+        padding: 15px;
+    }
+}
+
+@media (max-width:768px) {
+    .search_box {
+        padding: 10px;
+    }
+}
+
+@media (max-width:640px) {
+    .search_box {
+        padding: 8px;
+    }
+}
