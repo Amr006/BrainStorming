@@ -9,9 +9,9 @@ import { ExtensionsContext } from "@/context/ExtensionsContext";
 import { MainButton } from "@/MUIComponents/MainButton/MainButton";
 import Form from "../Form/Form";
 import { ChosenDataViewContext } from "@/context/ChosenDataViewContext";
-import { Box, IconButton, Modal, Typography } from "@mui/material";
+import { Box, Modal, Typography } from "@mui/material";
 import { RedIconButton } from "@/MUIComponents/RedIconButton/RedIconButton";
-import { Close, DeleteRounded, Preview } from "@mui/icons-material";
+import { Close, DeleteRounded } from "@mui/icons-material";
 import SpecialImage from "../SpecialImage/SpecialImage";
 import { MainIconButton } from "@/MUIComponents/MainIconButton/MainIconButton";
 import { Carousel } from "react-responsive-carousel";
@@ -29,7 +29,6 @@ const SparkModal = ({ type }) => {
     docFiles,
     audioFiles,
     handleRemoveImageFile,
-    handleRemoveDocFile,
     handleRemoveAudioFile,
     showUpdateSparkModal,
   } = useContext(SparkModalContext);
