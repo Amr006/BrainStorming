@@ -141,14 +141,26 @@ const allPostsForUser = asyncHandler( async(req,res,next) => {
     // Compare the dates in descending order (latest first)
     return dateB - dateA;
   });
+  const total = ideas.length
   if(req.query.page != 0)
   {
     ideas = ideas.slice(req.query.page*10 , req.query.page*10 + req.query.page*10 )
   }
 
+  if(ideas.length < 10)
+  {
+    return res.status(200).json({
+      data : ideas ,
+      message : "last spark",
+      totalSparks : total
+    })
+  }
+
   return res.status(200).json({
-    data : ideas
+    data : ideas ,
+    totalSparks : total
   })
+  
   }
   catch(err)
   {

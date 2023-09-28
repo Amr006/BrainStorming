@@ -130,7 +130,7 @@ const displayIdeas = asyncHandler(async(req, res, next) => {
       message : "you are not authorized"
     })
   }
-
+  var totalSparks = await Ideas.find({Team: teamId}).countDocuments()
   Ideas.find({ Team: teamId }).populate("WrittenBy").populate({
     path: "Team",
     populate:{
@@ -143,12 +143,14 @@ const displayIdeas = asyncHandler(async(req, res, next) => {
       {
         return res.status(200).json({
           data: result,
-          message : "last spark"
+          message : "last spark",
+          totalSparks : totalSparks
         });
       }else
       {
         return res.status(200).json({
           data: result,
+          totalSparks : totalSparks
         });
       }
       
