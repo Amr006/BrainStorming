@@ -33,4 +33,6 @@ router.get("/Teams", teamController.displayTeams);
 
 router.get("/Profile/:id", userControler.getProfile);
 
+router.get("/searchTeam" , teamController.searchTeam)
+
 module.exports = router;

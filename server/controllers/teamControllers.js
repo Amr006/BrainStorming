@@ -238,6 +238,44 @@ const leaveTeam = asyncHandler(async (req, res, next) => {
   }
 });
 
+const searchTeam = asyncHandler(async (req, res) => {
+  const { search } = req.query;
+  console.log(search);
+  try {
+    //const data2 = await Teams.find()
+  //  console.log(data2)
+    const data = await Teams.aggregate([
+      {
+        $search: {
+          index: "searchTeam",
+          text: {
+            query: search,
+            path: {
+              wildcard: "*"
+            }
+          }
+        }
+      }
+    ])
+  //  console.log(data)
+    
+    // const searchRegex = new RegExp(search , "i")
+
+    // const newdata = data2.filter((item) => {
+    //   return searchRegex.test(item.Name)
+    // }
+    // )
+
+    return res.status(200).json({
+      data: data
+    });
+  } catch (err) {
+    return res.status(404).json({
+      message: "Error while searching"
+    });
+  }
+});
+
 module.exports = {
   createTeam,
   displayTeams,
@@ -246,4 +284,5 @@ module.exports = {
   setTeamImage,
   getTeamInfo,
   leaveTeam,
+  searchTeam,
 };
