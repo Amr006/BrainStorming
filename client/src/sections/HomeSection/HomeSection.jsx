@@ -24,7 +24,6 @@ const HomeSection = () => {
       const token = Cookies.get("token");
       const user_id = Cookies.get("user_id");
       if (token && user_id) {
-        console.log(1)
         dispatch(getUserSparks({ token, user_id }));
       }
     } catch (err) {

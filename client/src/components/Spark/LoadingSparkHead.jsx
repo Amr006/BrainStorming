@@ -1,21 +1,4 @@
-import {
-  AdminPanelSettings,
-  Delete,
-  MoreVertRounded,
-  Person,
-} from "@mui/icons-material";
-import {
-  Box,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Skeleton,
-  Typography,
-} from "@mui/material";
-import Image from "next/image";
+import { Box, Skeleton } from "@mui/material";
 import React from "react";
 import styles from "./Spark.module.css";
 

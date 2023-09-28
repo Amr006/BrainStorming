@@ -81,6 +81,7 @@ const TeamSection = () => {
   const { team, isLoading } = useSelector((state) => state.team);
   const { user_id } = useSelector((state) => state.auth);
   const router = useRouter();
+
   useEffect(() => {
     try {
       dispatch(getTeam({ team_id: id, token: Cookies.get("token") }));

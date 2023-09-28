@@ -14,8 +14,14 @@ import {
 } from "@mui/icons-material";
 import AudioGridBox from "../GridBoxes/AudioGridBox/AudioGridBox";
 import TeamName from "./TeamName";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "next/navigation";
+import { useInView } from "react-intersection-observer";
+import { getSparks } from "@/store/sparksSlice";
+import { handleAlertToastify } from "@/functions/reactToastify";
+import axios from "axios";
 
-const Spark = ({ data, teamShow ,last}) => {
+const Spark = ({ data, teamShow }) => {
   return (
     <Box className={`grid jcs aic`}>
       {teamShow && <TeamName data={data} />}

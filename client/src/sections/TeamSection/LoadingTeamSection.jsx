@@ -22,10 +22,10 @@ const LoadingTeamSection = () => {
         {value === index && (
           <Container>
             <MyBox className={`grid jcs aifs g30 ${styles.grid_layout}`}>
-              <Box className={`grid jcs aic g20`}>
+              {/* <Box className={`grid jcs aic g20`}>
                 <LoadingMembersBox />
                 <Skeleton variant="rectangular" height={40} width={"100%"} />
-              </Box>
+              </Box> */}
               {children}
             </MyBox>
           </Container>

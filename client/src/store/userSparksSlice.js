@@ -4,7 +4,6 @@ import axios from "axios";
 export const getUserSparks = createAsyncThunk(
   "user_sparks/getUserSparks",
   async (args) => {
-    console.log(2)
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/allIdeas`,
       {
