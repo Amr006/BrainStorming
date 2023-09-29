@@ -3,28 +3,13 @@ import React from "react";
 import styles from "./Search.module.css";
 import { SearchOutlined } from "@mui/icons-material";
 import { SpecialIconButton } from "@/MUIComponents/SpecialIconButton/SpecialIconButton";
-import axios from "axios";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { searchTeams } from "@/store/teamsSlice";
 
 const Search = () => {
-  // const handleSearchForTeamName = async() => {
-  //   await axios
-  //     .get(`${process.env.NEXT_PUBLIC_SERVER_URL}/deleteAccount`, {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     })
-  //     .then((res) => {
-  //       handleAlertToastify(res.data.message, "success");
-  //       dispatch(logOut());
-  //       router.push("/");
-  //       handleToggleShowDeleteAccount();
-  //     })
-  //     .catch((err) => {
-  //       try {
-  //         handleAlertToastify(err.response.data.message, "info");
-  //       } catch (err) {
-  //         handleAlertToastify(err, "error");
-  //       }
-  //     });
-  // };
+  const dispatch = useDispatch();
+  const [searchInput, setSearchInput] = useState("");
   return (
     <Box className={`flex jcs aic g30 pad20 ${styles.search_box}`}>
       <TextField
@@ -32,8 +17,12 @@ const Search = () => {
         label="Search Team Name..."
         type="search"
         variant="standard"
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
       />
-      <SpecialIconButton>
+      <SpecialIconButton
+        onClick={() => dispatch(searchTeams({ search: searchInput }))}
+      >
         <SearchOutlined sx={{ color: (theme) => theme.palette.primary.main }} />
       </SpecialIconButton>
     </Box>

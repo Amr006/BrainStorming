@@ -9,11 +9,13 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import LoadingSpark from "../Spark/LoadingSpark";
+import { handleAlertToastify } from "@/functions/reactToastify";
 
 const Dashboard = () => {
   // const { userSparks, isLoading } = useSelector((state) => state.user_sparks);
   const [userSparks, setUserSparks] = useState([]);
   const [counter, setCounter] = useState(0);
+  const [totalSparks , setTotalSparks] = useState(0)
   const token = Cookies.get("token");
   const [done, setDone] = useState(false);
 
@@ -26,6 +28,7 @@ const Dashboard = () => {
         if (res.data.message === "last spark") {
           setDone(true);
         }
+        setTotalSparks(res.data.totalSparks)
         setUserSparks(res.data.data);
       })
       .catch((err) => {
