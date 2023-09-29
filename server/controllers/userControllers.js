@@ -142,22 +142,26 @@ const allPostsForUser = asyncHandler( async(req,res,next) => {
     return dateB - dateA;
   });
   const total = ideas.length
+  var newData = []
   if(req.query.page != 0)
   {
-    ideas = ideas.slice(req.query.page*10 , req.query.page*10 + req.query.page*10 )
+    newData = ideas.slice(req.query.page*10 , req.query.page*10 + req.query.page*10 )
+  }else
+  {
+    newData = ideas.slice(0, 10 )
   }
 
-  if(ideas.length < 10)
+  if(newData.length < 10)
   {
     return res.status(200).json({
-      data : ideas ,
+      data : newData ,
       message : "last spark",
       totalSparks : total
     })
   }
 
   return res.status(200).json({
-    data : ideas ,
+    data : newData ,
     totalSparks : total
   })
   
