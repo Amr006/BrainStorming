@@ -244,7 +244,9 @@ const searchTeam = asyncHandler(async (req, res) => {
   try {
     //const data2 = await Teams.find()
   //  console.log(data2)
-    const data = await Teams.aggregate([
+  if(search)
+  {
+    var data = await Teams.aggregate([
       {
         $search: {
           index: "searchTeam",
@@ -252,11 +254,36 @@ const searchTeam = asyncHandler(async (req, res) => {
             query: search,
             path: {
               wildcard: "*"
-            }
+            },
+            "fuzzy" : {}
           }
+          
+        }
+      },
+      {
+        $lookup: {
+          from : "users",
+          localField : "TeamLeader",
+          foreignField: "_id",
+          as: "TeamLeader"
         }
       }
-    ])
+      ,
+      {
+        $sort: {
+          createdAt: -1
+        }
+      }
+    ]).project({Password : 0 , "TeamLeader.Password" : 0 });
+    //await Teams.populate(data , {path: "TeamLeader"})
+    //console.log(data)
+  }else
+  {
+    var data = await Teams.find().select("-Password")
+    .populate("TeamLeader")
+    .sort({ createdAt: -1 })
+  }
+  
   //  console.log(data)
     
     // const searchRegex = new RegExp(search , "i")
@@ -270,6 +297,7 @@ const searchTeam = asyncHandler(async (req, res) => {
       data: data
     });
   } catch (err) {
+    console.log(err)
     return res.status(404).json({
       message: "Error while searching"
     });

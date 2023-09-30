@@ -145,7 +145,7 @@ const allPostsForUser = asyncHandler( async(req,res,next) => {
   var newData = []
   if(req.query.page != 0)
   {
-    newData = ideas.slice(req.query.page*10 , req.query.page*10 + req.query.page*10 )
+    newData = ideas.slice(req.query.page*10 , req.query.page*10 + 10 )
   }else
   {
     newData = ideas.slice(0, 10 )
