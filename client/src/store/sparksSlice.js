@@ -22,26 +22,27 @@ export const sparksSlice = createSlice({
   reducers: {
     reset: (state) => {
       state.counter = 0;
+      state.sparks = [];
+      state.totalSparks = 0;
+      state.isLoading = true;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(getSparks.fulfilled, (state, action) => {
       const data = action.payload.data;
       const counter = action.payload.counter;
-      if (state.counter > counter) {
-        return;
-      } else {
-        state.counter += 1;
-      }
       state.totalSparks = action.payload.totalSparks;
-      if (counter === 0) {
-        state.sparks = data;
-      } else {
-        data.map((spark) => {
-          state.sparks.push(spark);
-        });
+      if (state.counter === counter) {
+        if (counter === 0) {
+          state.sparks = data;
+        } else {
+          data.map((spark) => {
+            state.sparks.push(spark);
+          });
+        }
+        state.counter += 1;
+        state.isLoading = false;
       }
-      state.isLoading = false;
     });
   },
 });

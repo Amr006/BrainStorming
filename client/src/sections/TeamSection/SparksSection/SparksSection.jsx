@@ -20,12 +20,16 @@ const SparksSection = () => {
   });
 
   useEffect(() => {
-    dispatch(reset);
-  }, []);
+    if (inView) {
+      dispatch(getSparks({ counter, token, team_id: id }));
+    }
+  }, [inView]);
 
   useEffect(() => {
+    dispatch(reset())
     dispatch(getSparks({ counter, token, team_id: id }));
-  }, [inView]);
+  }, []);
+
   return (
     <Box className={`grid jcs aic g30`}>
       {sparks.length > 0 ? (
