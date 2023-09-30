@@ -304,6 +304,56 @@ const searchTeam = asyncHandler(async (req, res) => {
   }
 });
 
+const searchAutoCompleteTeam = asyncHandler(async (req, res) => {
+  const {search} = req.query;
+  console.log(search);
+  try {
+    //const data2 = await Teams.find()
+  //  console.log(data2)
+  if(search)
+  {
+  const searchRegex = new RegExp(search , "i")
+  var data = await Teams.find({Name : searchRegex} , "Name" )
+    // var data = await Teams.aggregate([
+    //   {
+    //     $search: {
+    //       index: "searchTeam",
+    //       text: {
+    //         query: search,
+    //         path: "Name",
+    //         "fuzzy" : {}
+    //       }
+          
+    //     }
+    //   }
+    //   ,
+    //   {
+    //     $sort: {
+    //       createdAt: -1
+    //     }
+    //   }
+    // ]).project({Name : 1  , _id : 1});
+
+  
+  }else
+  {
+    var data = await Teams.find({}, "Name").select()
+    .sort({ createdAt: -1 })
+  }
+  
+
+
+    return res.status(200).json({
+      data: data
+    });
+  } catch (err) {
+    console.log(err)
+    return res.status(404).json({
+      message: "Error while searching"
+    });
+  }
+});
+
 module.exports = {
   createTeam,
   displayTeams,
@@ -313,4 +363,5 @@ module.exports = {
   getTeamInfo,
   leaveTeam,
   searchTeam,
+  searchAutoCompleteTeam,
 };

@@ -176,4 +176,6 @@ const allPostsForUser = asyncHandler( async(req,res,next) => {
 }
 )
 
+
+
 module.exports = { getProfile, setProfilePic, setBackgroundPic, updateProfile ,deleteUser , allPostsForUser};
