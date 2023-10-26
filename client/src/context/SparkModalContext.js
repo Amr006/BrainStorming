@@ -16,6 +16,7 @@ export const SparkModalProvider = ({ children }) => {
   const [imageFiles, setImageFiles] = useState([]);
   const [record, setRecord] = useState(null);
   const [sparkId, setSparkId] = useState(null);
+  const [sparkIndex, setSparkIndex] = useState(null);
   const [updateIdea, setUpdateIdea] = useState(null);
   const [updateDescription, setUpdateDescription] = useState(null);
 
@@ -88,7 +89,9 @@ export const SparkModalProvider = ({ children }) => {
         docFiles,
         imageFiles,
         sparkId,
+        sparkIndex,
         setSparkId,
+        setSparkIndex,
         record,
         setAudioFiles,
         setDocFiles,

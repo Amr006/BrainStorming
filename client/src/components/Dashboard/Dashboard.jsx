@@ -25,7 +25,7 @@ const Dashboard = () => {
     if (inView) {
       dispatch(getUserSparks({ counter, token }));
     }
-  }, [inView]);
+  }, [dispatch, inView]);
   return (
     <MyBox>
       <Container className={`grid jcs aic g30`}>
@@ -34,16 +34,16 @@ const Dashboard = () => {
             if (i === sparks.length - 1) {
               return (
                 <Fragment key={i}>
-                  <Spark key={i} data={spark} teamShow={true} />
+                  <Spark index={i} key={i} data={spark} teamShow={true} />
                   {totalSparks > sparks.length && (
-                    <Fragment key={i+1}>
+                    <Fragment key={i + 1}>
                       <LoadingSpark refProp={ref} key={i * 100} last={true} />
                     </Fragment>
                   )}
                 </Fragment>
               );
             }
-            return <Spark key={i} data={spark} teamShow={true} />;
+            return <Spark index={i} key={i} data={spark} teamShow={true} />;
           })
         ) : (
           <LoadingDashboard />

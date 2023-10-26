@@ -9,16 +9,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { getSparks, reset } from "@/store/sparksSlice";
 import { useInView } from "react-intersection-observer";
 import { Fragment } from "react";
+import { socket } from "../../../../app/Main/Main";
 
 const SparksSection = () => {
-  const { sparks, counter, totalSparks } = useSelector((state) => state.sparks);
+  const { sparks, counter, isLoading, totalSparks } = useSelector((state) => state.sparks);
   const { id } = useParams();
   const token = Cookies.get("token");
   const dispatch = useDispatch();
   const { ref, inView } = useInView({
     threshold: 0,
   });
-
+  // socket.on('receive_message', (data) => {
+  //   console.log(data)
+  //   dispatch(getSparks({ token, team_id: id, newSpark: data }))
+  //   dispatch(getUserSparks({ token, newSpark: data }))
+  // })
   useEffect(() => {
     if (inView) {
       dispatch(getSparks({ counter, token, team_id: id }));
@@ -26,25 +31,28 @@ const SparksSection = () => {
   }, [inView]);
 
   useEffect(() => {
-    dispatch(reset())
-    dispatch(getSparks({ counter, token, team_id: id }));
+    if (!sparks || sparks.length === 0) {
+      dispatch(reset())
+      dispatch(getSparks({ counter, token, team_id: id }));
+    }
   }, []);
-
   return (
     <Box className={`grid jcs aic g30`}>
-      {sparks.length > 0 ? (
+      {isLoading ? (new Array(10).fill(0).map((_, i) => (
+        <LoadingSpark key={i} />
+      ))) : sparks.length > 0 ? (
         sparks.map((spark, i) => {
           if (i === sparks.length - 1) {
             return (
               <Fragment key={i}>
-                <Spark key={i} data={spark} />
+                <Spark key={i} index={i} data={spark} />
                 {totalSparks > sparks.length && (
-                  <LoadingSpark refProp={ref} key={1} last={true} />
+                  <LoadingSpark refProp={ref && ref} key={1} last={true} />
                 )}
               </Fragment>
             );
           } else {
-            return <Spark key={i} data={spark} />;
+            return <Spark key={i} index={i} data={spark} />;
           }
         })
       ) : (

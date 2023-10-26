@@ -19,6 +19,7 @@ const Search = () => {
         variant="standard"
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
+        onInput={(e) => dispatch(searchTeams({ search: e.target.value }))}
       />
       <SpecialIconButton
         onClick={() => dispatch(searchTeams({ search: searchInput }))}

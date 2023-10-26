@@ -8,25 +8,27 @@ import { ProfileModalContext } from "@/context/ProfileModalContext";
 import { useSelector } from "react-redux";
 import LoadingUserBox from "./LoadingUserBox";
 
-const UserBox = ({ isUser }) => {
+const UserBox = () => {
   const {
     handleToggleChangeAvatarModal,
     handleToggleViewAvatarModal,
     handleToggleEditProfileModal,
   } = useContext(ProfileModalContext);
-  const { userData, isLoading } = useSelector((state) => state.user);
-  return !isLoading ? (
+  const { isLoading, profileData } = useSelector((state) => state.profile)
+  const { user_id } = useSelector((state) => state.auth)
+
+  return !isLoading && profileData ? (
     <Box className={`flex jcsb aic g30 ${styles.user_box}`}>
       <Box className={`flex jcfs aic g10 ${styles.avatar_box}`}>
         <Box sx={{ position: "relative" }}>
           <Box
-            sx={{ backgroundImage: `url(${userData.Image})` }}
+            sx={{ backgroundImage: `url(${profileData.Image})` }}
             className={`flex jcc aic ${styles.avatar}`}
             onClick={handleToggleViewAvatarModal}
           >
             <Box className={`overlay ${styles.overlay}`}></Box>
           </Box>
-          {isUser && (
+          {profileData._id == user_id && (
             <Tooltip title="Change Avatar">
               <MainIconButton
                 onClick={handleToggleChangeAvatarModal}
@@ -38,11 +40,11 @@ const UserBox = ({ isUser }) => {
           )}
         </Box>
         <Box className={`grid jcfs aic ${styles.user_info}`}>
-          <Typography variant="h4">{userData.Name}</Typography>
+          <Typography variant="h4">{profileData.Name}</Typography>
         </Box>
       </Box>
       <Box className={`flex jcfe aic ${styles.edit_button}`}>
-        {isUser && (
+        {profileData._id == user_id && (
           <MainIconButton onClick={handleToggleEditProfileModal}>
             <EditRounded />
             <Typography variant="h6">Edit Profile</Typography>

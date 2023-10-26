@@ -23,7 +23,6 @@ import { handleAlertToastify } from "@/functions/reactToastify";
 import { socket } from "../../../app/Main/Main";
 
 const TeamSection = () => {
-  const { handleToggleLeaveTeamModal } = useContext(TeamModalContext);
   function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
     return (
@@ -65,7 +64,7 @@ const TeamSection = () => {
     };
   }
   const [value, setValue] = React.useState(1);
-
+  const { handleToggleLeaveTeamModal } = useContext(TeamModalContext);
   const {
     handleToggleChangeTeamImageModal,
     handleToggleViewTeamImageModal,
@@ -84,7 +83,8 @@ const TeamSection = () => {
 
   useEffect(() => {
     try {
-      dispatch(getTeam({ team_id: id, token: Cookies.get("token") }));
+      const token = Cookies.get("token")
+      dispatch(getTeam({ team_id: id, token }));
     } catch (err) {
       router.push("/");
       handleAlertToastify("Can't Access This Page", "error");
@@ -95,7 +95,7 @@ const TeamSection = () => {
     if (!isLoading && team) {
       socket.emit("join_room", team.Name);
     }
-  }, [isLoading]);
+  }, [isLoading, socket]);
 
   return isLoading || !team ? (
     <LoadingTeamSection />

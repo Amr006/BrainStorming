@@ -26,8 +26,9 @@ import { useSelector } from "react-redux";
 import Link from "next/link";
 import { handleSparkDate } from "../../functions/handleSparkDate";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { TeamModalContext } from "@/context/TeamModalContext";
 
-const SparkHead = ({ data }) => {
+const SparkHead = ({ data, index }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const { user_id } = useSelector((state) => state.auth);
   const handleClick = (event) => {
@@ -43,9 +44,11 @@ const SparkHead = ({ data }) => {
     handleToggleDeleteSparkModal,
     handleToggleUpdateSparkModal,
     setSparkId,
+    setSparkIndex,
     setUpdateIdea,
     setUpdateDescription,
   } = useContext(SparkModalContext);
+  const { setTeamId } = useContext(TeamModalContext);
   if (typeof document !== "undefined") {
     document.addEventListener("click", (event) => {
       if (
@@ -58,6 +61,7 @@ const SparkHead = ({ data }) => {
       }
     });
   }
+  console.log()
   return (
     <Box className={`flex jcsb aic g30 ${styles.user}`}>
       <Box className={`flex jcfs aic g10 `}>
@@ -111,22 +115,23 @@ const SparkHead = ({ data }) => {
       </Box>
       {(user_id === data.WrittenBy._id ||
         user_id === data.Team.TeamLeader._id) && (
-        <IconButton
-          id={`list_button_${data._id}`}
-          onClick={() => setOpenList(!openList)}
-        >
-          <MoreVertRounded
-            id={`list_icon_${data._id}`}
-            sx={{ color: (theme) => theme.palette.white }}
-            className={`${styles.icon_more}`}
-          />
-        </IconButton>
-      )}
+          <IconButton
+            id={`list_button_${data._id}`}
+            onClick={() => { setOpenList(!openList); setSparkId(data._id); setTeamId(data.Team._id) }}
+          >
+            <MoreVertRounded
+              id={`list_icon_${data._id}`}
+              sx={{ color: (theme) => theme.palette.white }}
+              className={`${styles.icon_more}`}
+            />
+          </IconButton>
+        )}
       {openList && (
         <List className={`${styles.spark_options}`}>
           <ListItem>
             <ListItemButton
               onClick={() => {
+                setSparkIndex(index)
                 setSparkId(data._id);
                 setUpdateIdea(data.Idea);
                 setUpdateDescription(data.Description);

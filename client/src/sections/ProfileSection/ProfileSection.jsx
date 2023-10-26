@@ -1,8 +1,8 @@
+"use client"
 import UserBack from "@/components/User/UserBack/UserBack";
 import UserBox from "@/components/User/UserBox/UserBox";
 import { Box, Container, Typography } from "@mui/material";
-import Cookies from "js-cookie";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import React from "react";
 import { useEffect } from "react";
 import UserInfo from "@/components/User/UserInfo/UserInfo";
@@ -11,25 +11,36 @@ import { RedIconButton } from "@/MUIComponents/RedIconButton/RedIconButton";
 import { useSelector } from "react-redux";
 import { useContext } from "react";
 import { ProfileModalContext } from "@/context/ProfileModalContext";
+import { useDispatch } from "react-redux";
+import { getProfileData } from "@/store/profileSlice";
 
 const ProfileSection = () => {
-  const { signed } = useSelector((state) => state.auth);
+  const { signed, user_id } = useSelector((state) => state.auth);
   const { handleToggleShowDeleteAccount } = useContext(ProfileModalContext);
-  const {isUser}= useSelector((state)=>state.user)
+  const { profileData, isLoading } = useSelector((state) => state.profile);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getProfileData(id));
+  }, [id]);
   return (
     <Box>
-      <UserBack isUser={isUser} />
-      <Container className={`grid jcs aic g30`}>
-        <UserBox isUser={isUser} />
-        <UserInfo title="Bio" />
-        <UserInfo title="About" />
-        {signed && isUser && (
-          <RedIconButton onClick={handleToggleShowDeleteAccount}>
-            <DeleteRounded />
-            <Typography variant="h6">Delete Account</Typography>
-          </RedIconButton>
-        )}
-      </Container>
+      {
+        !isLoading && profileData && (<>
+          <UserBack data={profileData} isLoading={isLoading} isUser={profileData._id == user_id} />
+          <Container className={`grid jcs aic g30`}>
+            <UserBox />
+            <UserInfo data={profileData} isLoading={isLoading} title="Bio" />
+            <UserInfo data={profileData} isLoading={isLoading} title="About" />
+            {signed && profileData._id == user_id && (
+              <RedIconButton onClick={handleToggleShowDeleteAccount}>
+                <DeleteRounded />
+                <Typography variant="h6">Delete Account</Typography>
+              </RedIconButton>
+            )}
+          </Container>
+        </>)
+      }
     </Box>
   );
 };

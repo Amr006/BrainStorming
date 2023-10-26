@@ -14,19 +14,12 @@ import {
 } from "@mui/icons-material";
 import AudioGridBox from "../GridBoxes/AudioGridBox/AudioGridBox";
 import TeamName from "./TeamName";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "next/navigation";
-import { useInView } from "react-intersection-observer";
-import { getSparks } from "@/store/sparksSlice";
-import { handleAlertToastify } from "@/functions/reactToastify";
-import axios from "axios";
-
-const Spark = ({ data, teamShow }) => {
+const Spark = ({ data, teamShow, index }) => {
   return (
     <Box className={`grid jcs aic`}>
       {teamShow && <TeamName data={data} />}
       <Box className={`grid jcs aic g10 ${styles.spark}`}>
-        <SparkHead data={data} />
+        <SparkHead index={index} data={data} />
         <Box className={`grid jcs aic g20 ${styles.spark_data}`}>
           <Box className={`grid jcfs aic g10`}>
             <Head h={"h5"} align="left" title={data.Idea} color={"#000"} />

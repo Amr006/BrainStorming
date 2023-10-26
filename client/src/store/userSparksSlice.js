@@ -6,8 +6,7 @@ export const getUserSparks = createAsyncThunk("sparks/getUserSparks", async (arg
     `${process.env.NEXT_PUBLIC_SERVER_URL}/allIdeas/?page=${args.counter}`,
     { headers: { Authorization: `Bearer ${args.token}` } }
   );
-  console.log({ ...res.data, counter: args.counter })
-  return { ...res.data, counter: args.counter };
+  return { ...res.data, counter: args.counter, deletedSpark: args.deletedSpark, updatedSpark: args.updatedSpark, newSpark: args.newSpark };
 });
 
 const initialState = {
@@ -32,6 +31,9 @@ export const userSparksSlice = createSlice({
     builder.addCase(getUserSparks.fulfilled, (state, action) => {
       const data = action.payload.data;
       const counter = action.payload.counter;
+      const deletedSpark = action.payload.deletedSpark
+      const updatedSpark = action.payload.updatedSpark
+      const newSpark = action.payload.newSpark
       state.totalSparks = action.payload.totalSparks;
       if (state.counter === counter) {
         if (counter === 0) {
@@ -43,8 +45,17 @@ export const userSparksSlice = createSlice({
         }
         state.counter += 1;
         state.isLoading = false;
+      } else {
+        if (deletedSpark) {
+          state.sparks = state.sparks.filter((e) => e._id != deletedSpark)
+        } else if (updatedSpark) {
+          const { idea, description } = updatedSpark.values
+          state.sparks[updatedSpark.sparkIndex].Idea = idea
+          state.sparks[updatedSpark.sparkIndex].Description = description
+        } else if (newSpark) {
+          state.sparks.unshift(newSpark)
+        }
       }
-      console.log(state.sparks.length)
     });
   },
 });

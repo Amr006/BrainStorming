@@ -14,7 +14,7 @@ const HomeSection = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUserSparks({ counter, token }));
-  }, []);
+  }, [dispatch]);
   return signed && sparks && sparks.length > 0 ? <Dashboard /> : <Home />;
 };
 

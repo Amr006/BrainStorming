@@ -5,20 +5,21 @@ import styles from "./UserBack.module.css";
 import { MainIconButton } from "@/MUIComponents/MainIconButton/MainIconButton";
 import { useContext } from "react";
 import { ProfileModalContext } from "@/context/ProfileModalContext";
-import { useSelector } from "react-redux";
 import LoadingUserBack from "./LoadingUserBack";
+import { useSelector } from "react-redux";
 
-const UserBack = ({isUser}) => {
+const UserBack = () => {
   const {
     handleToggleChangeProfileCoverModal,
     handleToggleViewCoverModal,
   } = useContext(ProfileModalContext);
-  const { userData,isLoading } = useSelector((state) => state.user);
+  const { isLoading, profileData } = useSelector((state) => state.profile)
+  const { user_id } = useSelector((state) => state.auth)
   return (
-    !isLoading ? (
+    !isLoading && profileData ? (
       <Box className={`${styles.user_back}`}>
         <Box
-          sx={{ backgroundImage: `url(${userData.BackgroundImage})` }}
+          sx={{ backgroundImage: `url(${profileData.BackgroundImage})` }}
           className={`${styles.cover}`}
         />
         <Box
@@ -26,7 +27,7 @@ const UserBack = ({isUser}) => {
           onClick={handleToggleViewCoverModal}
         ></Box>
 
-        {isUser && (
+        {profileData._id == user_id && (
           <MainIconButton
             onClick={handleToggleChangeProfileCoverModal}
             className={`${styles.change_cover_button}`}
@@ -36,7 +37,7 @@ const UserBack = ({isUser}) => {
           </MainIconButton>
         )}
       </Box>
-    ):(<LoadingUserBack/>)
+    ) : (<LoadingUserBack />)
   );
 };
 

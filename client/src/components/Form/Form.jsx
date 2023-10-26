@@ -30,12 +30,13 @@ import EditProfile from "./EditProfile/EditProfile";
 import ChangeTeamCover from "./ChangeTeamCover/ChangeTeamCover";
 import { getTeam } from "@/store/teamSlice";
 import DeleteSpark from "./DeleteSpark/DeleteSpark";
-import { getSparks } from "@/store/sparksSlice";
+import { getSparks, reset } from "@/store/sparksSlice";
 import DeleteAccount from "./DeleteAccount/DeleteAccount";
 import LeaveTeam from "./LeaveTeam/LeaveTeam";
 import UpdateSpark from "./UpdateSpark/UpdateSpark";
 import { getUserSparks } from "@/store/userSparksSlice";
 import { socket } from "../../../app/Main/Main";
+import { getProfileData } from "@/store/profileSlice";
 const Form = ({ type, setValue }) => {
   const { setButtonLoading } = useContext(LoadingButtonContext);
   const {
@@ -55,6 +56,7 @@ const Form = ({ type, setValue }) => {
   const {
     imageFiles,
     sparkId,
+    sparkIndex,
     audioFiles,
     record,
     docFiles,
@@ -145,8 +147,8 @@ const Form = ({ type, setValue }) => {
       .when("password", (password, field) =>
         password
           ? field
-              .required("Password isn't Matched")
-              .oneOf([yup.ref("password")])
+            .required("Password isn't Matched")
+            .oneOf([yup.ref("password")])
           : field
       ),
   });
@@ -371,7 +373,7 @@ const Form = ({ type, setValue }) => {
         .then((res) => {
           handleAlertToastify(res.data.message, "success");
           handleResetData();
-          dispatch(getUserSparks({ token, user_id }));
+          dispatch(reset());
           dispatch(getSparks({ team_id: id, token }));
           resetForm();
           setValue(1);
@@ -404,7 +406,7 @@ const Form = ({ type, setValue }) => {
         )
         .then((res) => {
           handleAlertToastify(res.data.message, "success");
-          dispatch(getUserData(user_id));
+          dispatch(getProfileData(id));
           handleToggleEditProfileModal();
         })
         .catch((err) => {
@@ -431,9 +433,12 @@ const Form = ({ type, setValue }) => {
         )
         .then((res) => {
           handleAlertToastify(res.data.message, "success");
-          dispatch(getSparks({ team_id: id, token }));
+          if (id) {
+            dispatch(getSparks({ team_id: teamId, token, updatedSpark: { sparkIndex, values } }));
+          } else {
+            dispatch(getUserSparks({ token, updatedSpark: { sparkIndex, values } }));
+          }
           handleToggleUpdateSparkModal();
-          dispatch(getUserSparks({ token, user_id }));
         })
         .catch((err) => {
           handleAlertToastify(err.response.data.message, "error");
@@ -459,9 +464,8 @@ const Form = ({ type, setValue }) => {
       )
       .then((res) => {
         handleAlertToastify(res.data.message, "success");
-        dispatch(getUserData(user_id));
+        dispatch(getProfileData(id));
         handleToggleChangeAvatarModal();
-        dispatch(getUserSparks({ token, user_id }));
         setFile(null);
       })
       .catch((err) => {
@@ -487,7 +491,7 @@ const Form = ({ type, setValue }) => {
       )
       .then((res) => {
         handleAlertToastify(res.data.message, "success");
-        dispatch(getUserData(user_id));
+        dispatch(getProfileData(id));
         handleToggleChangeProfileCoverModal();
         setFile(null);
       })
@@ -533,9 +537,12 @@ const Form = ({ type, setValue }) => {
       })
       .then((res) => {
         handleAlertToastify(res.data.message, "success");
-        dispatch(getSparks({ token, team_id: team._id }));
+        if (id) {
+          dispatch(getSparks({ token, team_id: id, deletedSpark: sparkId }));
+        } else {
+          dispatch(getUserSparks({ token, deletedSpark: sparkId }));
+        }
         handleToggleDeleteSparkModal();
-        dispatch(getUserSparks({ token, user_id }));
       })
       .catch((err) => {
         try {
@@ -618,54 +625,51 @@ const Form = ({ type, setValue }) => {
         type === "login"
           ? loginFormik.handleSubmit
           : type === "register"
-          ? registerFormik.handleSubmit
-          : type === "forgot_password"
-          ? forgotPasswordFormik.handleSubmit
-          : type === "reset_password"
-          ? resetPasswordFormik.handleSubmit
-          : type === "add_new_team"
-          ? addNewTeamFormik.handleSubmit
-          : type === "join_team"
-          ? joinTeamFormik.handleSubmit
-          : type === "create_spark"
-          ? createSparkFormik.handleSubmit
-          : type === "update_spark"
-          ? updateSparkFormik.handleSubmit
-          : type === "change_avatar"
-          ? handleChangeAvatar
-          : type === "change_team_image"
-          ? handleChangeTeamImage
-          : type === "delete_spark"
-          ? handleDeleteSpark
-          : type === "change_cover"
-          ? handleChangeCover
-          : type === "edit_profile"
-          ? editProfileFormik.handleSubmit
-          : type === "delete_account"
-          ? handleDeleteAccount
-          : type === "leave_team" && handleLeaveTeam
+            ? registerFormik.handleSubmit
+            : type === "forgot_password"
+              ? forgotPasswordFormik.handleSubmit
+              : type === "reset_password"
+                ? resetPasswordFormik.handleSubmit
+                : type === "add_new_team"
+                  ? addNewTeamFormik.handleSubmit
+                  : type === "join_team"
+                    ? joinTeamFormik.handleSubmit
+                    : type === "create_spark"
+                      ? createSparkFormik.handleSubmit
+                      : type === "update_spark"
+                        ? updateSparkFormik.handleSubmit
+                        : type === "change_avatar"
+                          ? handleChangeAvatar
+                          : type === "change_team_image"
+                            ? handleChangeTeamImage
+                            : type === "delete_spark"
+                              ? handleDeleteSpark
+                              : type === "change_cover"
+                                ? handleChangeCover
+                                : type === "edit_profile"
+                                  ? editProfileFormik.handleSubmit
+                                  : type === "delete_account"
+                                    ? handleDeleteAccount
+                                    : type === "leave_team" && handleLeaveTeam
       }
-      className={`grid jcs aifs ${
-        (type === "add_new_team" ||
-          type === "join_team" ||
-          type === "edit_profile" ||
-          type === "update_spark") &&
+      className={`grid jcs aifs ${(type === "add_new_team" ||
+        type === "join_team" ||
+        type === "edit_profile" ||
+        type === "update_spark") &&
         "team_form"
-      } ${
-        (type === "login" ||
+        } ${(type === "login" ||
           type === "register" ||
           type === "forgot_password" ||
           type === "reset_password") &&
         "auth_form"
-      }  ${type === "edit_profile" && "g30 edit_profile_box"} ${
-        (type === "change_cover" ||
+        }  ${type === "edit_profile" && "g30 edit_profile_box"} ${(type === "change_cover" ||
           type === "change_team_image" ||
           type === "change_avatar" ||
           type === "delete_spark" ||
           type === "delete_account" ||
           type === "leave_team") &&
         "profile_form g30"
-      } ${type === "create_spark" && "g30 spark_form border_none"}`}
+        } ${type === "create_spark" && "g30 spark_form border_none"}`}
       style={{ backgroundColor: "#fff" }}
     >
       {type === "login" ? (

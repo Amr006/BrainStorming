@@ -17,7 +17,6 @@ import { getUserData } from "@/store/userSlice";
 import Cookies from "js-cookie";
 import { getAuthData } from "@/store/authSlice";
 import SparkModal from "@/components/Models/SparkModal";
-import { getUserSparks } from "@/store/userSparksSlice";
 import { getTeam } from "@/store/teamSlice";
 import { MyBox } from "@/MUIComponents/MyBox/MyBox";
 import { io } from "socket.io-client";
@@ -29,15 +28,13 @@ const Main = ({ children }) => {
   const dispatch = useDispatch();
   const { id, unique } = useParams();
   const { userData } = useSelector((state) => state.user);
+
   useEffect(() => {
     try {
       const token = Cookies.get("token");
       const user_id = Cookies.get("user_id");
       dispatch(getAuthData({ token, user_id }));
-      function socketConnected() {
-        console.log("Connected to the server");
-      }
-      socket.on("connect", socketConnected);
+      socket.on("connect");
       if (user_id) {
         dispatch(getUserData(user_id));
       }

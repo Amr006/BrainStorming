@@ -1,12 +1,12 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
 import styles from "./UserInfo.module.css";
-import { useSelector } from "react-redux";
 import LoadingUserInfo from "./LoadingUserInfo";
+import { useSelector } from "react-redux";
 
 const UserInfo = ({ title }) => {
-  const { userData, isLoading } = useSelector((state) => state.user);
-  return !isLoading ? (
+  const { isLoading, profileData } = useSelector((state) => state.profile)
+  return !isLoading && profileData ? (
     <Box className={`grid jcs aic g10`} >
       <Typography variant="h5">{title}</Typography>
       {title.toLowerCase() === "about" ? (
@@ -15,10 +15,10 @@ const UserInfo = ({ title }) => {
           variant="h6"
           className={`fw500 flex jcfs aic ${styles.user_info_box}`}
           sx={{
-            color: (theme) => !userData.About && theme.palette.gray,
+            color: (theme) => !profileData.About && theme.palette.gray,
           }}
         >
-          {userData.About ? userData.About : "Write a Brief..."}
+          {profileData.About ? profileData.About : "Write a Brief..."}
         </Typography>
       ) : (
         <Typography
@@ -26,10 +26,10 @@ const UserInfo = ({ title }) => {
           variant="h6"
           className={`fw500 flex jcfs aic ${styles.user_info_box}`}
           sx={{
-            color: (theme) => !userData.Bio && theme.palette.gray,
+            color: (theme) => !profileData.Bio && theme.palette.gray,
           }}
         >
-          {userData.Bio ? userData.Bio : "Write a Bio..."}
+          {profileData.Bio ? profileData.Bio : "Write a Bio..."}
         </Typography>
       )}
     </Box>

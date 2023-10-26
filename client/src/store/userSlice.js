@@ -2,16 +2,22 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export const getUserData = createAsyncThunk("user/getUserData", async (user_id) => {
-  const res = await axios.get(
-    `${process.env.NEXT_PUBLIC_SERVER_URL}/Profile/${user_id}`
-  );
-  return res.data.data[0];
+export const getUserData = createAsyncThunk("user/getUserData", async () => {
+  try {
+    const user_id = Cookies.get("user_id")
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/Profile/${user_id}`
+    );
+    return res.data.data[0];
+  } catch (error) {
+    console.log(error)
+  }
+  return;
 });
 
 const initialState = {
   userData: null,
-  isUser:false,
+  isUser: false,
   isLoading: true,
 };
 
@@ -22,16 +28,16 @@ export const userSlice = createSlice({
     builder.addCase(getUserData.fulfilled, (state, action) => {
       state.userData = action.payload;
       state.isLoading = false
-      try{
+      try {
         const user_id = Cookies.get("user_id")
-        if(user_id === state.userData._id){
+        if (user_id === state.userData._id) {
           state.isUser = true
-        }else{
+        } else {
           state.isUser = false
         }
-      }catch(err){
-          state.userData = null
-          state.isUser = false
+      } catch (err) {
+        state.userData = null
+        state.isUser = false
       }
     });
   },
