@@ -119,7 +119,7 @@ app.use(
   })
 );
 app.use(xss());
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(bodyParser.json());
 // app.use(hpp());
 // app.use(
@@ -238,8 +238,9 @@ io.on("connection", (socket) => {
     console.log("USER DISCONNECTED");
   });
 });
+console.log(process.env.DB_CONN)
 mongoose
-  .connect(process.env.DB_CONN, {
+  .connect('mongodb://127.0.0.1:27017/BrainStorm', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -247,6 +248,9 @@ mongoose
     server.listen(Port, () => {
       console.log(`App listening at http://${ip}:${Port}`);
     });
+  })
+  .catch((err) => {
+    console.error(err);
   });
 
 //last to catch any wrong url ( needs cool 404 page :) )
