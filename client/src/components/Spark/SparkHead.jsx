@@ -61,7 +61,6 @@ const SparkHead = ({ data, index }) => {
       }
     });
   }
-  console.log()
   return (
     <Box className={`flex jcsb aic g30 ${styles.user}`}>
       <Box className={`flex jcfs aic g10 `}>

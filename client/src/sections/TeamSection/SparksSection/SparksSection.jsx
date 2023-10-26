@@ -10,6 +10,7 @@ import { getSparks, reset } from "@/store/sparksSlice";
 import { useInView } from "react-intersection-observer";
 import { Fragment } from "react";
 import { socket } from "../../../../app/Main/Main";
+import { getUserSparks } from "@/store/userSparksSlice";
 
 const SparksSection = () => {
   const { sparks, counter, isLoading, totalSparks } = useSelector((state) => state.sparks);
@@ -19,11 +20,11 @@ const SparksSection = () => {
   const { ref, inView } = useInView({
     threshold: 0,
   });
-  // socket.on('receive_message', (data) => {
-  //   console.log(data)
-  //   dispatch(getSparks({ token, team_id: id, newSpark: data }))
-  //   dispatch(getUserSparks({ token, newSpark: data }))
-  // })
+  socket.on('receive_message', (data) => {
+    console.log(data)
+    dispatch(getSparks({ token, team_id: id, newSpark: data }))
+    dispatch(getUserSparks({ token, newSpark: data }))
+  })
   useEffect(() => {
     if (inView) {
       dispatch(getSparks({ counter, token, team_id: id }));
