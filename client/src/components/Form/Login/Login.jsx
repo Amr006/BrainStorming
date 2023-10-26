@@ -25,7 +25,13 @@ const Login = ({
         sx={{ backgroundImage: `url(${loginImg.src})`, position: "relative" }}
       >
         <Box className={"overlay"}></Box>
-        <Head align={"center"} h={"h3"} title={"Welcome Back"} color={"#fff"} />
+        <Head
+          align={"center"}
+          h={"h3"}
+          title={"Welcome Back"}
+          color={"#fff"}
+          nowrap={true}
+        />
       </Box>
       <Box className={`grid aic jcs g20 form_contain`}>
         <Logo title={true} color={"#333"} />

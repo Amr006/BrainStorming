@@ -2,12 +2,12 @@
 import React from "react";
 import { Box, Container, Typography } from "@mui/material";
 import { MainButton } from "@/MUIComponents/MainButton/MainButton";
-import Image from "next/image";
 import backImg from "../../../public/images/team8.svg";
 import shapeImg from "../../../public/images/shape.png";
 import styles from "./Home.module.css";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const Home = () => {
   const router = useRouter();
@@ -16,12 +16,10 @@ const Home = () => {
   };
 
   return (
-    <Container
-      className={`grid jcs aic tac ${styles.home}`}
-    >
+    <Container className={`grid jcs aic tac ${styles.home}`}>
       <Box className={`grid jcfs aic g10 ${styles.text}`}>
         <Box className={`flex jcfs aic ${styles.shape_box}`}>
-          <Image alt="home_Image_shape" src={shapeImg} />
+          <LazyLoadImage alt="home_Image_shape" src={shapeImg.src} />
         </Box>
         <Typography
           variant={"h1"}
@@ -37,10 +35,8 @@ const Home = () => {
           Start
         </MainButton>
       </Box>
-      <Box
-        className={`flex jcfe aic ${styles.image_box}`}
-      >
-        <Image alt="home_background" src={backImg} />
+      <Box className={`flex jcfe aic ${styles.image_box}`}>
+        <LazyLoadImage alt="home_background" src={backImg.src} />
       </Box>
     </Container>
   );

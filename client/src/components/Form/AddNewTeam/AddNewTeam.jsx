@@ -1,16 +1,14 @@
 import { MainButton } from "@/MUIComponents/MainButton/MainButton";
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import React, { useContext } from "react";
 import "../Form.css";
 import { RedButton } from "@/MUIComponents/RedButton/RedButton";
-import { FileUploader } from "react-drag-drop-files";
 import { TeamModalContext } from "@/context/TeamModalContext";
 import Head from "@/components/Head/Head";
 import { GroupAddRounded } from "@mui/icons-material";
 
-const AddNewTeam = ({ handleChangeFile, formik }) => {
+const AddNewTeam = ({ formik }) => {
   const { handleToggleAddNewTeamModal } = useContext(TeamModalContext);
-  const fileTypes = ["JPG", "JPEG", "PNG", "GIF"];
   return (
     <Box className={`grid aic jcs g20 add_new_team_form_contain`}>
       <Box className={`flex jcc aic g10 add_new_team_title`}>
@@ -21,6 +19,7 @@ const AddNewTeam = ({ handleChangeFile, formik }) => {
           title={"Add New Team"}
           h={"h4"}
           color={(theme) => theme.palette.primary.main}
+        nowrap={true}
         />
       </Box>
       <Box className={`grid aic jcs g20`}>
@@ -48,17 +47,6 @@ const AddNewTeam = ({ handleChangeFile, formik }) => {
           helperText={formik.touched.password && formik.errors.password}
         />
       </Box>
-      {/* <Box className={`grid jcs aic g10`}>
-        <Typography variant="h6" className={`fw500`}>
-          Upload Team Image
-        </Typography>
-        <FileUploader
-          handleChange={handleChangeFile}
-          name="file"
-          types={fileTypes}
-          multiple={true}
-        />
-      </Box> */}
       <Box className={`flex jcfe aic g20`}>
         <MainButton type="submit">Add</MainButton>
         <RedButton onClick={handleToggleAddNewTeamModal}>Cancel</RedButton>

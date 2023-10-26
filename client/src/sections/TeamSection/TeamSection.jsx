@@ -19,6 +19,9 @@ import { useContext } from "react";
 import { TeamModalContext } from "@/context/TeamModalContext";
 import LoadingTeamSection from "./LoadingTeamSection";
 import { RedIconButton } from "@/MUIComponents/RedIconButton/RedIconButton";
+import { handleAlertToastify } from "@/functions/reactToastify";
+import { socket } from "../../../app/Main/Main";
+
 const TeamSection = () => {
   const { handleToggleLeaveTeamModal } = useContext(TeamModalContext);
   function CustomTabPanel(props) {
@@ -62,6 +65,7 @@ const TeamSection = () => {
     };
   }
   const [value, setValue] = React.useState(1);
+
   const {
     handleToggleChangeTeamImageModal,
     handleToggleViewTeamImageModal,
@@ -71,11 +75,13 @@ const TeamSection = () => {
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
+
   const dispatch = useDispatch();
   const { id } = useParams();
   const { team, isLoading } = useSelector((state) => state.team);
   const { user_id } = useSelector((state) => state.auth);
   const router = useRouter();
+
   useEffect(() => {
     try {
       dispatch(getTeam({ team_id: id, token: Cookies.get("token") }));
@@ -83,7 +89,14 @@ const TeamSection = () => {
       router.push("/");
       handleAlertToastify("Can't Access This Page", "error");
     }
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!isLoading && team) {
+      socket.emit("join_room", team.Name);
+    }
+  }, [isLoading]);
+
   return isLoading || !team ? (
     <LoadingTeamSection />
   ) : (
@@ -92,13 +105,13 @@ const TeamSection = () => {
         className={`grid jcc aife ${styles.room_head}`}
         sx={{ backgroundImage: `url(${team.Image})` }}
       >
-          <Head
-            title={team.Name}
-            teamName={true}
-            align="center"
-            color="#fff"
-            h="h2"
-          />
+        <Head
+          title={team.Name}
+          teamName={true}
+          align="center"
+          color="#fff"
+          h="h2"
+        />
         <Tabs
           value={value}
           centered

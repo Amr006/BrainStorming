@@ -1,4 +1,3 @@
-import { MainButton } from "@/MUIComponents/MainButton/MainButton";
 import { Box } from "@mui/material";
 import React, { useContext } from "react";
 import "../Form.css";
@@ -12,7 +11,7 @@ import { ExtensionsContext } from "@/context/ExtensionsContext";
 
 const ChangeAvatar = ({ handleChangeFile }) => {
   const { handleToggleChangeAvatarModal } = useContext(ProfileModalContext);
-  const {images} = useContext(ExtensionsContext)
+  const { images } = useContext(ExtensionsContext);
   return (
     <Box className={`grid aic jcs g20 add_new_team_form_contain`}>
       <Box className={`flex jcc aic g10 add_new_team_title`}>
@@ -23,6 +22,7 @@ const ChangeAvatar = ({ handleChangeFile }) => {
           title={"Change Profile Avatar"}
           h={"h4"}
           color={(theme) => theme.palette.primary.main}
+          nowrap={true}
         />
       </Box>
       <FileUploader

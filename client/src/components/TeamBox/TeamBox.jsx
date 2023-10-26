@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
-import { Box, Grow, Typography } from "@mui/material";
+import { Box, Grow } from "@mui/material";
 import styles from "./TeamBox.module.css";
-import Image from "next/image";
 import { MainButton } from "@/MUIComponents/MainButton/MainButton";
 import { TeamModalContext } from "@/context/TeamModalContext";
 import axios from "axios";
@@ -11,12 +10,14 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Head from "../Head/Head";
 import { motion } from "framer-motion";
+// import { socket } from "../../../app/Main/Main";
 
 const TeamBox = ({ data }) => {
   const { handleToggleJoinTeamModal, setTeamId } = useContext(TeamModalContext);
   const { setButtonLoading } = useContext(LoadingButtonContext);
   const { user_id, token } = useSelector((state) => state.auth);
   const router = useRouter();
+
   const handleEnterTeam = async () => {
     setButtonLoading(true);
     await axios
@@ -25,11 +26,15 @@ const TeamBox = ({ data }) => {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((res) => {
+      .then(() => {
         router.push(`/teams/${data._id}`);
       })
       .catch((err) => {
-        handleAlertToastify(err.response.data.message, "error");
+        try {
+          handleAlertToastify(err.response.data.message, "error");
+        } catch (error) {
+          handleAlertToastify(error, "error");
+        }
       });
     setButtonLoading(false);
   };
@@ -45,10 +50,9 @@ const TeamBox = ({ data }) => {
           className={`flex jcc aic ${styles.room_image_box}`}
           sx={{
             backgroundColor: (theme) => theme.palette.white,
-            backgroundImage:`url(${data.Image})`
+            backgroundImage: `url(${data.Image})`,
           }}
-        >
-        </Box>
+        ></Box>
         <Box className={`grid jcs aic g20 ${styles.room_data}`}>
           <Box className={`grid jcc aic`}>
             <Head

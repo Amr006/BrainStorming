@@ -25,6 +25,7 @@ const ResetPassword = ({ formik }) => {
           h={"h2"}
           title={"Reset Your Key"}
           color={"#fff"}
+          nowrap={true}
         />
       </Box>
       <Box className={`grid aifs jcs g20 form_contain`}>

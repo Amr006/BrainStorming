@@ -10,10 +10,10 @@ import Head from "@/components/Head/Head";
 
 const EditProfile = ({ formik }) => {
   const [help, setHelp] = useState(false);
-  const {handleToggleEditProfileModal} = useContext(ProfileModalContext)
+  const { handleToggleEditProfileModal } = useContext(ProfileModalContext);
   return (
     <>
-      <Head align={"center"} h={"h3"} title={"Edit Profile"} />
+      <Head align={"center"} h={"h3"} title={"Edit Profile"} nowrap={true} />
       <Box className={`grid jcs aic g20`}>
         <Box className={`grid jcs aic g5`}>
           <Box className={`flex jcs aic g5`}>

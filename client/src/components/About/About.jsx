@@ -1,4 +1,4 @@
-import { Box, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import React from "react";
 import Head from "../Head/Head";
 import Developer from "../Developer/Developer";

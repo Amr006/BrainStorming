@@ -18,6 +18,7 @@ const UpdateSpark = ({ formik }) => {
           title={"Update Spark"}
           h={"h3"}
           color={(theme) => theme.palette.primary.main}
+          nowrap={true}
         />
       </Box>
       <TextField

@@ -3,10 +3,11 @@ import { Box, Skeleton } from "@mui/material";
 import styles from "./Spark.module.css";
 import LoadingSparkHead from "./LoadingSparkHead";
 
-const LoadingSpark = () => {
+const LoadingSpark = ({ last,refProp }) => {
   return (
     <Box
       className={`grid jcs aic g10 ${styles.spark} ${styles.loading_spark}`}
+      ref={last && refProp}
     >
       <LoadingSparkHead />
       <Box className={`grid jcs aic g10 ${styles.spark_data}`}>

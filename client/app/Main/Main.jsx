@@ -4,7 +4,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import TeamModal from "@/components/Models/TeamModal";
 import FloatActionButtons from "@/components/FloatActionButtons/FloatActionButtons";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { PageBox } from "@/MUIComponents/PageBox/PageBox";
 import BackLoading from "@/components/BackLoading/BackLoading";
 import { ToastContainer } from "react-toastify";
@@ -20,6 +20,9 @@ import SparkModal from "@/components/Models/SparkModal";
 import { getUserSparks } from "@/store/userSparksSlice";
 import { getTeam } from "@/store/teamSlice";
 import { MyBox } from "@/MUIComponents/MyBox/MyBox";
+import { io } from "socket.io-client";
+
+export const socket = io.connect("localhost:3000");
 
 const Main = ({ children }) => {
   const pathname = usePathname();
@@ -31,9 +34,10 @@ const Main = ({ children }) => {
       const token = Cookies.get("token");
       const user_id = Cookies.get("user_id");
       dispatch(getAuthData({ token, user_id }));
-      if (token && user_id) {
-        dispatch(getUserSparks({ token, user_id }));
+      function socketConnected() {
+        console.log("Connected to the server");
       }
+      socket.on("connect", socketConnected);
       if (user_id) {
         dispatch(getUserData(user_id));
       }

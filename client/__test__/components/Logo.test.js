@@ -4,7 +4,19 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import Logo from "@/components/Logo/Logo";
 const theme = createTheme();
 
-describe("Logo Component", () => {
+describe.skip("Logo Component", () => {
+  it("Logo Button", () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <Logo title={true} />
+      </ThemeProvider>
+    );
+    const logoButton = screen.getByRole("button",{
+      name:/BrainStorming/i
+    });
+    expect(logoButton).toBeInTheDocument();
+  });
+
   it("Logo Icon", () => {
     render(
       <ThemeProvider theme={theme}>

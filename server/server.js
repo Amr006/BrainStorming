@@ -19,6 +19,9 @@ const passport = require("passport");
 const rateLimit = require("express-rate-limit");
 var hpp = require("hpp");
 const mongoSanitize = require("express-mongo-sanitize");
+const { Server } = require("socket.io");
+const http = require("http");
+const compression = require('compression'); 
 
 const uploadImage = require("./utils/uploadImage");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
@@ -29,9 +32,10 @@ const Routes = require("./routes/authRoutes");
 const GoogleStrategy = require("./utils/google-auth");
 const FacebookStrategy = require("./utils/facebook-auth");
 
+const server = http.createServer(app);
 
 // Use the express.static middleware to serve static files from the public folder
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + "/public"));
 // logger.error("hello error")
 // logger.debug("heelo debug")
 // logger.warn("hello warn")
@@ -42,7 +46,7 @@ const corsOptions = {
     "https://brainstorming-omega.vercel.app",
     "http://localhost:4000",
     "http://127.0.0.1:5500",
-    "https://brainstorming-ecru.vercel.app"
+    "https://brainstorming-ecru.vercel.app",
 
     // your origins here
   ],
@@ -77,8 +81,8 @@ var accessLogStream = fs.createWriteStream(path.join(__dirname, "access.log"), {
 // setup the logger
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  windowMs: 15 * 60 * 100, // 15 minutes
+  max: 1000, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   message: { message: "Too much request" },
@@ -93,11 +97,11 @@ const limiter = rateLimit({
 // Apply the rate limiting middleware to all requests
 app.use(limiter);
 //app.use(morgan('combined', { stream: accessLogStream }))
-app.use(morgan("combined"));
+//app.use(morgan("combined"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(openapiSpecification));
-
+app.use(compression());
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -112,7 +116,7 @@ app.use(
         ],
       },
     },
-  }),
+  })
 );
 app.use(xss());
 app.use(cors(corsOptions));
@@ -132,7 +136,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     maxAge: 24 * 60 * 60 * 100,
-  }),
+  })
 );
 app.use(passport.initialize());
 app.use(passport.session());
@@ -209,25 +213,41 @@ app.use("/api", Routes);
 
 app.use(notFound);
 app.use(errorHandler);
+const io = new Server(server, {
+  cors: {
+    origin: ["http://localhost:4000","https://brainstorming-ecru.vercel.app/"],
+    methods: ["GET", "POST"],
+  },
+});
+io.on("connection", (socket) => {
+  console.log("helllllllllllooooooooooooooooooooooooooooo socket connection");
+  console.log(socket.id);
 
+  socket.on("join_room", (data) => {
+    socket.join(data);
+    console.log("helllllllllllooooooooooooooooooooooooooooo join room");
+    console.log("User Joined Room: " + data);
+  });
+
+  socket.on("send_message", (data) => {
+    console.log("helllllllllllooooooooooooooooooooooooooooo send message");
+    console.log({ data });
+    socket.to(data.team).emit("receive_message", data.spark);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("USER DISCONNECTED");
+  });
+});
 mongoose
   .connect(process.env.DB_CONN, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then((result) => {
-    app.listen(Port, () => {
+  .then(() => {
+    server.listen(Port, () => {
       console.log(`App listening at http://${ip}:${Port}`);
-      console.log(
-        "Database Connected : ",
-        result.connection.host,
-        result.connection.name,
-      );
-      let val = "Amr006";
     });
-  })
-  .catch((err) => {
-    console.log(err);
   });
 
 //last to catch any wrong url ( needs cool 404 page :) )

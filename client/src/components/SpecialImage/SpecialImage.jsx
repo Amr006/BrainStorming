@@ -1,8 +1,7 @@
 import React from "react";
 import styles from "./SpecialImage.module.css";
 import { Box } from "@mui/material";
-import Image from "next/image";
-import { Img } from "react-image";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const SpecialImage = ({
   str,
@@ -14,8 +13,8 @@ const SpecialImage = ({
   slider,
 }) => {
   return slider ? (
-    <Box sx={{position:"absolute"}} className={`center_x`}>
-      <Img src={img} alt={"post"} loading="lazy" />
+    <Box sx={{ position: "absolute" }} className={`center_x`}>
+      <LazyLoadImage src={img} alt={"post"} />
     </Box>
   ) : (
     <Box
@@ -30,7 +29,7 @@ const SpecialImage = ({
           styles.back_img
         }`}
       />
-      <Img src={img} alt={"post"} loading="lazy" />
+      <LazyLoadImage src={img} alt={"post"} />
     </Box>
   );
 };

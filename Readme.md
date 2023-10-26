@@ -32,7 +32,7 @@ To get the most out of BrainStorming, you'll need:
 
 ### 🥳 Installation
 
-1. Visit the BrainStorming website at [https://brainstorming-ecru.vercel.app/](https://brainstorming-ecru.vercel.app/).
+1. Visit the BrainStorming website at [https://brainstorming-ecru.vercel.app/](https://www.brainstorming.com).
 2. Sign up for an account or log in if you already have one.
 3. Follow the on-screen instructions to set up your profile.
 
@@ -45,7 +45,8 @@ BrainStorming offers an array of powerful features:
 - **User Profiles:** Customize your profile with avatars, profile covers, bio, and more.
 - **Team Leader Privileges:** Team leaders can edit/delete posts, change team covers, and more.
 - **User Management:** Leave teams or delete your account easily.
-
+- **User Authentication:** Alternatively, you can log in quickly using Google, LinkedIn, or Facebook.
+- 
 ## 💯 Usage
 
 ### ⚽ Creating a Team

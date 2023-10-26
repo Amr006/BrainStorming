@@ -119,11 +119,11 @@ const allPostsForUser = asyncHandler( async(req,res,next) => {
   try
   {
   const userData = await User.findById(req.userId)
-  console.log(userData)
+  // console.log(userData)
   var ideas = []
   for(let i = 0 ; i < userData.Teams.length ; i++)
   {
-    console.log(userData.Teams[i])
+    // console.log(userData.Teams[i])
     var teamIdeas = await Ideas.find({Team: userData.Teams[i]}).populate("WrittenBy").populate({
       path: "Team",
       populate:{
@@ -131,7 +131,7 @@ const allPostsForUser = asyncHandler( async(req,res,next) => {
         model: "User"
       }
     })
-    console.log(teamIdeas)
+    // console.log(teamIdeas)
     ideas.push(...teamIdeas)
   }
   ideas.sort((a, b) => {
@@ -141,10 +141,30 @@ const allPostsForUser = asyncHandler( async(req,res,next) => {
     // Compare the dates in descending order (latest first)
     return dateB - dateA;
   });
-  
+  const total = ideas.length
+  var newData = []
+  if(req.query.page != 0)
+  {
+    newData = ideas.slice(req.query.page*10 , req.query.page*10 + 10 )
+  }else
+  {
+    newData = ideas.slice(0, 10 )
+  }
+
+  if(newData.length < 10)
+  {
+    return res.status(200).json({
+      data : newData ,
+      message : "last spark",
+      totalSparks : total
+    })
+  }
+
   return res.status(200).json({
-    data : ideas
+    data : newData ,
+    totalSparks : total
   })
+  
   }
   catch(err)
   {
@@ -155,5 +175,7 @@ const allPostsForUser = asyncHandler( async(req,res,next) => {
   }
 }
 )
+
+
 
 module.exports = { getProfile, setProfilePic, setBackgroundPic, updateProfile ,deleteUser , allPostsForUser};

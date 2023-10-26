@@ -32,14 +32,12 @@ import { getTeam } from "@/store/teamSlice";
 import DeleteSpark from "./DeleteSpark/DeleteSpark";
 import { getSparks } from "@/store/sparksSlice";
 import DeleteAccount from "./DeleteAccount/DeleteAccount";
-import { MyThemeContext } from "@/context/MyThemeContext";
 import LeaveTeam from "./LeaveTeam/LeaveTeam";
 import UpdateSpark from "./UpdateSpark/UpdateSpark";
 import { getUserSparks } from "@/store/userSparksSlice";
-
+import { socket } from "../../../app/Main/Main";
 const Form = ({ type, setValue }) => {
   const { setButtonLoading } = useContext(LoadingButtonContext);
-  const { mode } = useContext(MyThemeContext);
   const {
     teamId,
     handleToggleJoinTeamModal,
@@ -219,7 +217,7 @@ const Form = ({ type, setValue }) => {
       setButtonLoading(true);
       await axios
         .post(`${process.env.NEXT_PUBLIC_SERVER_URL}/login`, { ...values })
-        .then((res) => {
+        .then(async (res) => {
           router.push(process.env.NEXT_PUBLIC_HOME_PAGE);
           Cookies.set("token", res.data.token);
           Cookies.set("user_id", res.data.userId);
@@ -377,6 +375,10 @@ const Form = ({ type, setValue }) => {
           dispatch(getSparks({ team_id: id, token }));
           resetForm();
           setValue(1);
+          socket.emit("send_message", {
+            spark: res.data.data,
+            team: team.Name,
+          });
         })
         .catch((err) => {
           handleAlertToastify(err.response.data.message, "error");
@@ -560,7 +562,7 @@ const Form = ({ type, setValue }) => {
       })
       .catch((err) => {
         try {
-          handleAlertToastify(err.response.data.message, "error");
+          handleAlertToastify(err.response.data.message, "info");
         } catch (err) {
           handleAlertToastify(err, "error");
         }
@@ -664,11 +666,7 @@ const Form = ({ type, setValue }) => {
           type === "leave_team") &&
         "profile_form g30"
       } ${type === "create_spark" && "g30 spark_form border_none"}`}
-      style={
-        mode === "light"
-          ? { backgroundColor: "#fff" }
-          : { backgroundColor: "#000", border: "2px solid #037ef3" }
-      }
+      style={{ backgroundColor: "#fff" }}
     >
       {type === "login" ? (
         <Login

@@ -19,6 +19,7 @@ const JoinTeam = ({ formik }) => {
           title={"Join Team"}
           h={"h3"}
           color={(theme) => theme.palette.primary.main}
+          nowrap={true}
         />
       </Box>
       <TextField

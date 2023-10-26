@@ -1,31 +1,21 @@
 "use client";
 import Dashboard from "@/components/Dashboard/Dashboard";
 import Home from "@/components/Home/Home";
-import { getUserSparks } from "@/store/userSparksSlice";
+import { getUserSparks, reset } from "@/store/userSparksSlice";
 import Cookies from "js-cookie";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { socket } from "../../../app/Main/Main";
 
 const HomeSection = () => {
   const { signed } = useSelector((state) => state.auth);
-  const { userSparks } = useSelector((state) => state.user_sparks);
+  const { sparks, counter } = useSelector((state) => state.user_sparks);
+  const token = Cookies.get("token");
   const dispatch = useDispatch();
   useEffect(() => {
-    try {
-      const token = Cookies.get("token");
-      const user_id = Cookies.get("user_id");
-      if (token && user_id) {
-        dispatch(getUserSparks({ token, user_id }));
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }, [dispatch]);
-  return signed && userSparks && userSparks.length > 0 ? (
-    <Dashboard />
-  ) : (
-    <Home />
-  );
+    dispatch(getUserSparks({ counter, token }));
+  }, []);
+  return signed && sparks && sparks.length > 0 ? <Dashboard /> : <Home />;
 };
 
 export default HomeSection;

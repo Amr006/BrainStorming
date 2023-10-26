@@ -2,28 +2,51 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import Spark from "@/components/Spark/Spark";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getSparks } from "@/store/sparksSlice";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Cookies from "js-cookie";
-const SparksSection = () => {
-  const { id } = useParams();
-  const { sparks, isLoading } = useSelector((state) => state.sparks);
-  const router = useRouter();
+import LoadingSpark from "@/components/Spark/LoadingSpark";
+import { useDispatch, useSelector } from "react-redux";
+import { getSparks, reset } from "@/store/sparksSlice";
+import { useInView } from "react-intersection-observer";
+import { Fragment } from "react";
 
+const SparksSection = () => {
+  const { sparks, counter, totalSparks } = useSelector((state) => state.sparks);
+  const { id } = useParams();
+  const token = Cookies.get("token");
   const dispatch = useDispatch();
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
+
   useEffect(() => {
-    try {
-      dispatch(getSparks({ team_id: id, token: Cookies.get("token") }));
-    } catch (err) {
-      router.push("/");
-      handleAlertToastify("Can't Access This Page", "error");
+    if (inView) {
+      dispatch(getSparks({ counter, token, team_id: id }));
     }
+  }, [inView]);
+
+  useEffect(() => {
+    dispatch(reset())
+    dispatch(getSparks({ counter, token, team_id: id }));
   }, []);
+
   return (
     <Box className={`grid jcs aic g30`}>
       {sparks.length > 0 ? (
-        sparks.map((spark, i) => <Spark key={i} data={spark} />)
+        sparks.map((spark, i) => {
+          if (i === sparks.length - 1) {
+            return (
+              <Fragment key={i}>
+                <Spark key={i} data={spark} />
+                {totalSparks > sparks.length && (
+                  <LoadingSpark refProp={ref} key={1} last={true} />
+                )}
+              </Fragment>
+            );
+          } else {
+            return <Spark key={i} data={spark} />;
+          }
+        })
       ) : (
         <Typography
           variant="h2"

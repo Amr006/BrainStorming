@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Tooltip, Typography } from "@mui/material";
 import styles from "./Head.module.css";
 
-const Head = ({ title, align, h, color, special }) => {
+const Head = ({ title, nowrap ,align, h, color, special }) => {
   return (
     <Box
       className={`flex aic ${
@@ -11,10 +11,11 @@ const Head = ({ title, align, h, color, special }) => {
       sx={{
         position: "relative",
       }}
+      data-testid="title"
     >
-      {title && title.length > 20 ? (
+      {title && !nowrap && title.length > 20 ? (
         <Tooltip title={title} arrow>
-          <Typography
+          <Typography 
             sx={{ textAlign: { align }, color: color ? color : "#333" }}
             variant={h}
           >
@@ -25,6 +26,7 @@ const Head = ({ title, align, h, color, special }) => {
         <Typography
           sx={{ textAlign: { align }, color: color ? color : "#333" }}
           variant={h}
+          data-testid="title_paragraph"
         >
           {title}
         </Typography>

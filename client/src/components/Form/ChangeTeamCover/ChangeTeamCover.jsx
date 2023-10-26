@@ -26,6 +26,7 @@ const ChangeTeamCover = ({ handleChangeFile }) => {
           title={"Change Team Cover"}
           h={"h4"}
           color={(theme) => theme.palette.primary.main}
+          nowrap={true}
         />
       </Box>
       <FileUploader

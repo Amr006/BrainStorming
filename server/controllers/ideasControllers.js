@@ -11,6 +11,7 @@ const fs = require("fs").promises;
 const path = require("path");
 
 
+
 const postIdeas = asyncHandler(async (req, res, next) => {
   const { idea, description, team } = req.body;
   const teamData = await Teams.findById(team)
@@ -20,8 +21,8 @@ const postIdeas = asyncHandler(async (req, res, next) => {
       message : "You are not authorized"
     })
   }
-  console.log(req.files.files);
-  console.log(idea);
+//  console.log(req.files.files);
+//  console.log(idea);
   if (!idea) {
     return res.status(400).json({
       message: "Please fill Brainwave",
@@ -43,8 +44,8 @@ const postIdeas = asyncHandler(async (req, res, next) => {
         message: "Error while uploading files and images !",
       });
     }
-    console.log("here to delete")
-    console.log(arrayOfUrls)
+    //console.log("here to delete")
+    //console.log(arrayOfUrls)
     var imagesArray = [];
     var filesArray = [];
     var audiosArray = [];
@@ -60,11 +61,11 @@ const postIdeas = asyncHandler(async (req, res, next) => {
       
   }
   var audio = "";
-  console.log(req.files.record)
+//  console.log(req.files.record)
   if(req.files && req.files.record && req.files.record.length > 0)
   {
     try {
-      console.log(req.files.record)
+//console.log(req.files.record)
       urlOfImage = await uploadImage(req.files.record[0], "record");
     } catch (err) {
       return res.status(500).json({
@@ -84,12 +85,13 @@ const postIdeas = asyncHandler(async (req, res, next) => {
     Team: team,
     WrittenBy: req.userId,
   });
-  console.log(newIdea)
+//  console.log(newIdea)
   await newIdea
     .save()
     .then((result) => {
       res.status(200).json({
         message: "Idea Added Successfully",
+        data : result ,
       });
       
     })
@@ -128,18 +130,30 @@ const displayIdeas = asyncHandler(async(req, res, next) => {
       message : "you are not authorized"
     })
   }
-
+  var totalSparks = await Ideas.find({Team: teamId}).countDocuments()
   Ideas.find({ Team: teamId }).populate("WrittenBy").populate({
     path: "Team",
     populate:{
       path: "TeamLeader",
       model: "User"
     }
-  }).sort({createdAt: -1})
+  }).sort({createdAt: -1}).limit(req.query.limit).skip(req.query.page*5)
     .then((result) => {
-      return res.status(200).json({
-        data: result,
-      });
+      if(result.length < 5)
+      {
+        return res.status(200).json({
+          data: result,
+          message : "last spark",
+          totalSparks : totalSparks
+        });
+      }else
+      {
+        return res.status(200).json({
+          data: result,
+          totalSparks : totalSparks
+        });
+      }
+      
     })
     .catch((err) => {
       return res.status(404).json({
@@ -163,7 +177,7 @@ const updateIdea = asyncHandler(async (req, res, next) => {
   const { idea, description } = req.body;
 
   const data = await Ideas.findOne({ _id: req.params.id }).populate("WrittenBy") ;
-  console.log(data)
+//  console.log(data)
   if (data && data.WrittenBy._id == req.userId) {
     data.Idea = idea;
     data.Description = description;
@@ -173,5 +187,6 @@ const updateIdea = asyncHandler(async (req, res, next) => {
     return res.status(403).json({ error: "Access denied or data not found." });
   }
 });
+
 
 module.exports = { displayIdeas, postIdeas, deleteIdea, updateIdea };

@@ -24,6 +24,7 @@ const ForgotPassword = ({ formik }) => {
           h={"h2"}
           title={"Forgot Your Key"}
           color={"#fff"}
+          nowrap={true}
         />
       </Box>
       <Box className={`grid aic jcs g20 form_contain`}>

@@ -6,8 +6,8 @@ import { TeamModalContext } from "@/context/TeamModalContext";
 import styles from "./Models.module.css";
 import { MainIconButton } from "@/MUIComponents/MainIconButton/MainIconButton";
 import { CameraAltRounded } from "@mui/icons-material";
-import { Img } from "react-image";
 import { useSelector } from "react-redux";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 const TeamModal = ({ type }) => {
   const { user_id } = useSelector((state) => state.auth);
   const { team } = useSelector((state) => state.team);
@@ -71,12 +71,7 @@ const TeamModal = ({ type }) => {
       <Box
         className={`grid jcs aic g30 ${styles.view_team_image_box}  ${styles.modal_box} ${styles.avatar_box}`}
       >
-        <Img
-          alt="team cover"
-          loading={"lazy"}
-          src={teamImage}
-          crossOrigin="anonymous"
-        />
+        <LazyLoadImage alt="team cover" src={teamImage} />
         {team && user_id && team.TeamLeader._id === user_id && (
           <MainIconButton
             onClick={() => {

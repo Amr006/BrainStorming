@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import pdfImg from "../../../public/images/pdf.png";
 import powerPointImg from "../../../public/images/pptx.png";
 import excelImg from "../../../public/images/xlsx.png";
@@ -11,6 +10,7 @@ import styles from "./Document.module.css";
 import { DeleteRounded, Preview } from "@mui/icons-material";
 import { RedIconButton } from "@/MUIComponents/RedIconButton/RedIconButton";
 import { SparkModalContext } from "@/context/SparkModalContext";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const Document = ({
   posting,
@@ -62,18 +62,13 @@ const Document = ({
             className={`${overlay && "overlay"} ${overlay && styles.overlay}`}
           />
           {fileType === "pdf" ? (
-            <Image src={pdfImg} width={100} height={100} alt={"document"} />
+            <LazyLoadImage src={pdfImg.src} alt={"document"} />
           ) : fileType === "xlsx" ? (
-            <Image src={excelImg} width={100} height={100} alt={"document"} />
+            <LazyLoadImage src={excelImg.src} alt={"document"} />
           ) : fileType === "pptx" ? (
-            <Image
-              src={powerPointImg}
-              width={100}
-              height={100}
-              alt={"document"}
-            />
+            <LazyLoadImage src={powerPointImg.src} alt={"document"} />
           ) : (
-            <Image src={wordImg} width={100} height={100} alt={"document"} />
+            <LazyLoadImage src={wordImg.src} alt={"document"} />
           )}
           <Typography variant="h6">
             {doc.name.length > 10
@@ -137,18 +132,13 @@ const Document = ({
             className={`${overlay && "overlay"} ${overlay && styles.overlay}`}
           />
           {fileType === "pdf" ? (
-            <Image src={pdfImg} width={100} height={100} alt={"document"} />
+            <LazyLoadImage src={pdfImg.src} alt={"document"} />
           ) : fileType === "xlsx" ? (
-            <Image src={excelImg} width={100} height={100} alt={"document"} />
+            <LazyLoadImage src={excelImg.src} alt={"document"} />
           ) : fileType === "pptx" ? (
-            <Image
-              src={powerPointImg}
-              width={100}
-              height={100}
-              alt={"document"}
-            />
+            <LazyLoadImage src={powerPointImg.src} alt={"document"} />
           ) : (
-            <Image src={wordImg} width={100} height={100} alt={"document"} />
+            <LazyLoadImage src={wordImg.src} alt={"document"} />
           )}
           <Typography variant="h6">
             File-{i}.{fileType}

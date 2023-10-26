@@ -17,7 +17,6 @@ import {
   Popover,
   Typography,
 } from "@mui/material";
-import Image from "next/image";
 import React from "react";
 import styles from "./Spark.module.css";
 import { useState } from "react";
@@ -26,6 +25,7 @@ import { useContext } from "react";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import { handleSparkDate } from "../../functions/handleSparkDate";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const SparkHead = ({ data }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -63,14 +63,7 @@ const SparkHead = ({ data }) => {
       <Box className={`flex jcfs aic g10 `}>
         <Link href={`/profile/${data.WrittenBy._id}`}>
           <Box className={`flex jcc aic ${styles.avatar}`}>
-            <Image
-              loading="lazy"
-              width={100}
-              height={100}
-              la
-              alt="avatar"
-              src={data.WrittenBy.Image}
-            />
+            <LazyLoadImage alt="avatar" src={data.WrittenBy.Image} />
           </Box>
         </Link>
         <Box className={`grid jcfs aic`}>

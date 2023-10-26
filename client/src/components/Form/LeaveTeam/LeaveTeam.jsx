@@ -1,7 +1,6 @@
 import { RedButton } from "@/MUIComponents/RedButton/RedButton";
 import Head from "@/components/Head/Head";
 import LoadingButton from "@/components/LoadingButton/LoadingButton";
-import { MyThemeContext } from "@/context/MyThemeContext";
 import { TeamModalContext } from "@/context/TeamModalContext";
 import { Box } from "@mui/material";
 import React from "react";
@@ -9,14 +8,14 @@ import { useContext } from "react";
 
 const LeaveTeam = () => {
   const { handleToggleLeaveTeamModal } = useContext(TeamModalContext);
-  const { mode } = useContext(MyThemeContext);
   return (
     <>
       <Head
         align={"center"}
         h={"h5"}
         title={"Are you sure to Leave a Team ?"}
-        color={mode === "dark" ? "#fff" : "#000"}
+        color={"#000"}
+        nowrap={true}
       />
       <Box className={`flex jcfe aic g20`}>
         <LoadingButton text={"delete"} />

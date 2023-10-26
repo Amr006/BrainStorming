@@ -29,7 +29,13 @@ const Register = ({
         }}
       >
         <Box className={"overlay"}></Box>
-        <Head align={"center"} h={"h3"} title={"Join Us"} color={"#fff"} />
+        <Head
+          align={"center"}
+          h={"h3"}
+          title={"Join Us"}
+          color={"#fff"}
+          nowrap={true}
+        />
       </Box>
       <Box className={`grid aic jcs g20 form_contain`}>
         <Logo title={true} color={"#333"} />

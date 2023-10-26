@@ -33,4 +33,7 @@ router.get("/Teams", teamController.displayTeams);
 
 router.get("/Profile/:id", userControler.getProfile);
 
+router.get("/searchTeam" , teamController.searchTeam)
+
+router.get("/searchAutoCompleteTeam" , teamController.searchAutoCompleteTeam)
 module.exports = router;
