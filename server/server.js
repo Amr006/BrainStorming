@@ -31,6 +31,7 @@ const logger = require("./logger/index");
 const Routes = require("./routes/authRoutes");
 const GoogleStrategy = require("./utils/google-auth");
 const FacebookStrategy = require("./utils/facebook-auth");
+const Idea = require("./models/IdeasSchema")
 
 const server = http.createServer(app);
 
@@ -229,10 +230,11 @@ io.on("connection", (socket) => {
     console.log("User Joined Room: " + data);
   });
 
-  socket.on("send_message", (data) => {
+  socket.on("send_message", async(data) => {
     console.log("helllllllllllooooooooooooooooooooooooooooo send message");
     console.log({ data });
-    socket.to(data.team).emit("receive_message", data.spark);
+    const newData = await Idea.findById(data.spark._id).populate("Team");
+    socket.to(data.team).emit("receive_message", newData);
   });
 
   socket.on("disconnect", () => {
