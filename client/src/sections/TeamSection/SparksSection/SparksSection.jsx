@@ -1,39 +1,33 @@
-import Reacts from "react";
+import React from "react";
 import { Box, Typography } from "@mui/material";
 import Spark from "@/components/Spark/Spark";
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import Cookies from "js-cookie";
-import { handleAlertToastify } from "@/functions/reactToastify";
 import LoadingSpark from "@/components/Spark/LoadingSpark";
-import { useState } from "react";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { getSparks, reset } from "@/store/sparksSlice";
+import { useInView } from "react-intersection-observer";
+import { Fragment } from "react";
 
 const SparksSection = () => {
+  const { sparks, counter, totalSparks } = useSelector((state) => state.sparks);
   const { id } = useParams();
-  const [sparks, setSparks] = useState([]);
-  const [counter, setCounter] = useState(0);
-  const [done, setDone] = useState(false);
-  const [allSparks , setAllSparks] = useState(0)
   const token = Cookies.get("token");
-  const handleFetchTeamSparks = async () => {
-    await axios
-      .get(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/ideas/${id}?limit=5&page=${counter}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      .then((res) => {
-        if (res.data.message === "last spark") {
-          setDone(true);
-        }
-        setSparks(res.data.data);
-      })
-      .catch((err) => {
-        handleAlertToastify(err.response.data.message, "error");
-      });
-  };
+  const dispatch = useDispatch();
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
+
   useEffect(() => {
-    handleFetchTeamSparks();
+    if (inView) {
+      dispatch(getSparks({ counter, token, team_id: id }));
+    }
+  }, [inView]);
+
+  useEffect(() => {
+    dispatch(reset())
+    dispatch(getSparks({ counter, token, team_id: id }));
   }, []);
 
   return (
@@ -42,28 +36,16 @@ const SparksSection = () => {
         sparks.map((spark, i) => {
           if (i === sparks.length - 1) {
             return (
-              <>
+              <Fragment key={i}>
                 <Spark key={i} data={spark} />
-                {!done && (
-                  <>
-                    <LoadingSpark
-                      key={i * 100}
-                      setCounter={setCounter}
-                      setSparks={setSparks}
-                      last={true}
-                      done={done}
-                      setDone={setDone}
-                      counter={counter}
-                    />
-                    <LoadingSpark />
-                    <LoadingSpark />
-                    <LoadingSpark />
-                  </>
+                {totalSparks > sparks.length && (
+                  <LoadingSpark refProp={ref} key={1} last={true} />
                 )}
-              </>
+              </Fragment>
             );
+          } else {
+            return <Spark key={i} data={spark} />;
           }
-          return <Spark key={i} data={spark} />;
         })
       ) : (
         <Typography

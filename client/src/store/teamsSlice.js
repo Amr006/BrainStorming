@@ -7,10 +7,40 @@ export const getTeams = createAsyncThunk("teams/getTeams", async () => {
   return res.data.data;
 });
 
+export const searchTeams = createAsyncThunk(
+  "teams/searchTeams",
+  async (args) => {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/searchTeam?search=${args.search}`
+    );
+    return res.data.data;
+  }
+);
+
 const initialState = {
   teams: [],
   user_teams: [],
   isLoading: true,
+};
+
+const teamsFunc = (state, action) => {
+  const all = action.payload;
+  let user_id = "0";
+  state.teams = [];
+  state.user_teams = [];
+  try {
+    user_id = Cookies.get("user_id");
+    all.map((team) => {
+      if (team.Members.includes(user_id)) {
+        state.user_teams.push(team);
+      } else {
+        state.teams.push(team);
+      }
+    });
+  } catch (err) {
+    state.teams = all;
+  }
+  state.isLoading = false;
 };
 
 export const teamsSlice = createSlice({
@@ -20,8 +50,8 @@ export const teamsSlice = createSlice({
     builder.addCase(getTeams.fulfilled, (state, action) => {
       const all = action.payload;
       let user_id = "0";
-      state.teams = []
-      state.user_teams = []
+      state.teams = [];
+      state.user_teams = [];
       try {
         user_id = Cookies.get("user_id");
         all.map((team) => {
@@ -32,10 +62,19 @@ export const teamsSlice = createSlice({
           }
         });
       } catch (err) {
-        state.teams = all
+        state.teams = all;
       }
       state.isLoading = false;
     });
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getTeams.fulfilled, (state, action) => {
+        teamsFunc(state, action);
+      })
+      .addCase(searchTeams.fulfilled, (state, action) => {
+        teamsFunc(state, action);
+      });
+  }
 });
 export default teamsSlice.reducer;

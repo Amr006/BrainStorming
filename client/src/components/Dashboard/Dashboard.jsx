@@ -1,68 +1,46 @@
 import React from "react";
 import { Container } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Spark from "../Spark/Spark";
 import LoadingDashboard from "./LoadingDashboard";
 import { MyBox } from "@/MUIComponents/MyBox/MyBox";
-import { useState } from "react";
-import axios from "axios";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import LoadingSpark from "../Spark/LoadingSpark";
+import { getUserSparks, reset } from "@/store/userSparksSlice";
+import { useInView } from "react-intersection-observer";
+import { Fragment } from "react";
 
 const Dashboard = () => {
-  // const { userSparks, isLoading } = useSelector((state) => state.user_sparks);
-  const [userSparks, setUserSparks] = useState([]);
-  const [counter, setCounter] = useState(0);
+  const { sparks, counter, totalSparks } = useSelector(
+    (state) => state.user_sparks
+  );
   const token = Cookies.get("token");
-  const [done, setDone] = useState(false);
-
-  const handleFetchUserSparks = async () => {
-    await axios
-      .get(`${process.env.NEXT_PUBLIC_SERVER_URL}/allIdeas?page=${counter}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        if (res.data.message === "last spark") {
-          setDone(true);
-        }
-        setUserSparks(res.data.data);
-      })
-      .catch((err) => {
-        handleAlertToastify(err.response.data.message, "error");
-      });
-  };
+  const dispatch = useDispatch();
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
 
   useEffect(() => {
-    handleFetchUserSparks();
-  }, []);
+    if (inView) {
+      dispatch(getUserSparks({ counter, token }));
+    }
+  }, [inView]);
   return (
     <MyBox>
       <Container className={`grid jcs aic g30`}>
-        {userSparks.length > 0 ? (
-          userSparks.map((spark, i) => {
-            if (i === userSparks.length - 1) {
+        {sparks.length > 0 ? (
+          sparks.map((spark, i) => {
+            if (i === sparks.length - 1) {
               return (
-                <>
+                <Fragment key={i}>
                   <Spark key={i} data={spark} teamShow={true} />
-                  {!done && (
-                    <>
-                      <LoadingSpark
-                        key={i * 100}
-                        setCounter={setCounter}
-                        setUserSparks={setUserSparks}
-                        last={true}
-                        done={done}
-                        setDone={setDone}
-                        counter={counter}
-                        all={true}
-                      />
-                      <LoadingSpark />
-                      <LoadingSpark />
-                      <LoadingSpark />
-                    </>
+                  {totalSparks > sparks.length && (
+                    <Fragment key={i+1}>
+                      <LoadingSpark refProp={ref} key={i * 100} last={true} />
+                    </Fragment>
                   )}
-                </>
+                </Fragment>
               );
             }
             return <Spark key={i} data={spark} teamShow={true} />;
