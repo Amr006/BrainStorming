@@ -221,19 +221,19 @@ const io = new Server(server, {
   },
 });
 io.on("connection", (socket) => {
-  console.log("helllllllllllooooooooooooooooooooooooooooo socket connection");
-  console.log(socket.id);
+//  console.log("helllllllllllooooooooooooooooooooooooooooo socket connection");
+//  console.log(socket.id);
 
   socket.on("join_room", (data) => {
     socket.join(data);
-    console.log("helllllllllllooooooooooooooooooooooooooooo join room");
-    console.log("User Joined Room: " + data);
+  //  console.log("helllllllllllooooooooooooooooooooooooooooo join room");
+  //  console.log("User Joined Room: " + data);
   });
 
   socket.on("send_message", async(data) => {
-    console.log("helllllllllllooooooooooooooooooooooooooooo send message");
-    console.log({ data });
-    const newData = await Idea.findById(data.spark._id).populate("Team");
+  //  console.log("helllllllllllooooooooooooooooooooooooooooo send message");
+  //  console.log({ data });
+    const newData = await Idea.findById(data.spark._id).populate("Team").populate("WrittenBy");
     socket.to(data.team).emit("receive_message", newData);
   });
 
