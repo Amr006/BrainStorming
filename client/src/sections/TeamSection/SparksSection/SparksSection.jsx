@@ -20,11 +20,10 @@ const SparksSection = () => {
   const { ref, inView } = useInView({
     threshold: 0,
   });
-  socket.on('receive_message', (data) => {
-    console.log(data)
-    dispatch(getSparks({ token, team_id: id, newSpark: data }))
-    dispatch(getUserSparks({ token, newSpark: data }))
-  })
+  // socket.on('receive_message', (data) => {
+  //   dispatch(getSparks({ token, team_id: id, newSpark: data }))
+  //   dispatch(getUserSparks({ token, newSpark: data }))
+  // })
   useEffect(() => {
     if (inView) {
       dispatch(getSparks({ counter, token, team_id: id }));
