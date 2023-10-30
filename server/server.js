@@ -120,7 +120,7 @@ app.use(
   })
 );
 app.use(xss());
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(bodyParser.json());
 // app.use(hpp());
 // app.use(
@@ -221,19 +221,19 @@ const io = new Server(server, {
   },
 });
 io.on("connection", (socket) => {
-  console.log("helllllllllllooooooooooooooooooooooooooooo socket connection");
-  console.log(socket.id);
+//  console.log("helllllllllllooooooooooooooooooooooooooooo socket connection");
+//  console.log(socket.id);
 
   socket.on("join_room", (data) => {
     socket.join(data);
-    console.log("helllllllllllooooooooooooooooooooooooooooo join room");
-    console.log("User Joined Room: " + data);
+  //  console.log("helllllllllllooooooooooooooooooooooooooooo join room");
+  //  console.log("User Joined Room: " + data);
   });
 
   socket.on("send_message", async(data) => {
-    console.log("helllllllllllooooooooooooooooooooooooooooo send message");
-    console.log({ data });
-    const newData = await Idea.findById(data.spark._id).populate("Team");
+  //  console.log("helllllllllllooooooooooooooooooooooooooooo send message");
+  //  console.log({ data });
+    const newData = await Idea.findById(data.spark._id).populate("Team").populate("WrittenBy");
     socket.to(data.team).emit("receive_message", newData);
   });
 
@@ -241,8 +241,9 @@ io.on("connection", (socket) => {
     console.log("USER DISCONNECTED");
   });
 });
+console.log(process.env.DB_CONN)
 mongoose
-  .connect(process.env.DB_CONN, {
+  .connect('mongodb://127.0.0.1:27017/BrainStorm', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -250,6 +251,9 @@ mongoose
     server.listen(Port, () => {
       console.log(`App listening at http://${ip}:${Port}`);
     });
+  })
+  .catch((err) => {
+    console.error(err);
   });
 
 //last to catch any wrong url ( needs cool 404 page :) )
